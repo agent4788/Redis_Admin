@@ -36,6 +36,9 @@ public class KeyTreeViewModel {
      */
     public TreeItem<String> getKeyList() {
 
+        //Map leeren
+        map.clear();
+
         //Icons
         Node database = new ImageView(new Image(getClass().getResourceAsStream("recource/database.png")));
         Image folderImage = new Image(getClass().getResourceAsStream("recource/folder.png"));

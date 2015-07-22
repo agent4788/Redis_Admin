@@ -120,6 +120,13 @@ public class RedisAdminController {
         });
     }
 
+    @FXML
+    void clickReloadMenuItem(ActionEvent event) {
+
+        //Schluessel einlesen
+        keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+    }
+
     public static String getCurrentKey() {
 
         return RedisAdminController.currentKey;

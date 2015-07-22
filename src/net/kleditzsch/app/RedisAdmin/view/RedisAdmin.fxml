@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -35,7 +36,18 @@
                         <ComboBox fx:id="connectionChooser" prefHeight="26.0" prefWidth="270.0" />
                      </children>
                   </FlowPane>
-                  <TreeView fx:id="keyTree" prefHeight="767.0" prefWidth="237.0" />
+                  <TreeView fx:id="keyTree" prefHeight="767.0" prefWidth="237.0">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#clickReloadMenuItem" text="aktualisiern">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="F5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator>
+                              </MenuItem>
+                          </items>
+                        </ContextMenu>
+                     </contextMenu></TreeView>
                </children>
             </VBox>
             <BorderPane fx:id="keyView" prefHeight="769.0" prefWidth="717.0">
