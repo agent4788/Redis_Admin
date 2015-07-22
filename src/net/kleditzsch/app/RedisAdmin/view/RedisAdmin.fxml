@@ -6,27 +6,43 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.kleditzsch.app.RedisAdmin.view.RedisAdminController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Datei">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickSettingsMenuItem" text="Einstellungen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" onAction="#clickExitMenuItem" text="beenden" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="?">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#clickAboutMenuItem" text="Über" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
    </top>
+   <center>
+      <SplitPane dividerPositions="0.35370741482965934" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <items>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="90.0" prefWidth="237.0">
+                     <children>
+                        <ComboBox fx:id="connectionChooser" prefHeight="26.0" prefWidth="270.0" />
+                     </children>
+                  </FlowPane>
+                  <TreeView fx:id="keyTree" prefHeight="767.0" prefWidth="237.0" />
+               </children>
+            </VBox>
+            <BorderPane fx:id="keyView" prefHeight="769.0" prefWidth="717.0">
+               <bottom>
+                  <ListView prefHeight="159.0" prefWidth="641.0" BorderPane.alignment="CENTER" />
+               </bottom></BorderPane>
+         </items>
+      </SplitPane>
+   </center>
 </BorderPane>
