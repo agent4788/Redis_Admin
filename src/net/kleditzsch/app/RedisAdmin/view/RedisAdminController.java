@@ -73,7 +73,7 @@ public class RedisAdminController {
 
                 KeyTreeViewModel model = KeyTreeViewModel.getInstance();
                 String key = model.getKey(newValue);
-                if(model.keyExists(key)) {
+                if(key != null && model.keyExists(key)) {
 
                     try {
 
