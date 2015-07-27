@@ -79,7 +79,6 @@ public class UiDialogHelper {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        alert.showAndWait();
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
