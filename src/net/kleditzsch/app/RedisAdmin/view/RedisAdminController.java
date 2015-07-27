@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
@@ -40,6 +41,9 @@ public class RedisAdminController {
 
     @FXML // fx:id="keyView"
     private BorderPane keyView; // Value injected by FXMLLoader
+
+    @FXML // fx:id="deleteTreeContextMenuItem"
+    private MenuItem deleteTreeContextMenuItem; // Value injected by FXMLLoader
 
     @FXML
     void clickAboutMenuItem(ActionEvent event) {
@@ -73,7 +77,10 @@ public class RedisAdminController {
 
                 KeyTreeViewModel model = KeyTreeViewModel.getInstance();
                 String key = model.getKey(newValue);
-                if(key != null && model.keyExists(key)) {
+                if (key != null && model.keyExists(key)) {
+
+                    //loeschen verfuegbar machen
+                    deleteTreeContextMenuItem.setDisable(false);
 
                     try {
 
@@ -82,7 +89,7 @@ public class RedisAdminController {
                         Parent root = null;
                         RedisAdminController.setCurrentKey(key);
                         String type = db.type(key);
-                        switch(type) {
+                        switch (type) {
 
                             case "string":
 
@@ -106,7 +113,7 @@ public class RedisAdminController {
                                 break;
                         }
 
-                        if(root != null) {
+                        if (root != null) {
 
                             keyView.setCenter(root);
                         }
@@ -115,6 +122,10 @@ public class RedisAdminController {
                         UiDialogHelper.showExceptionDialog(e);
                         //UiDialogHelper.showErrorDialog("Fehler", null, "Eine FXML Datei konnte nicht gelesen werden");
                     }
+                } else {
+
+                    //kein existierender Schluessel -> loeschen deaktivieren
+                    deleteTreeContextMenuItem.setDisable(true);
                 }
             }
         });
@@ -125,6 +136,29 @@ public class RedisAdminController {
 
         //Schluessel einlesen
         keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+    }
+
+    @FXML
+    void clickDeleteTreeItem(ActionEvent event) {
+
+        //Schluessel finden
+        String key = KeyTreeViewModel.getInstance().getKey(keyTree.getSelectionModel().getSelectedItem());
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        if(key != null && key != "" && db.exists(key)) {
+
+            //Sicherheitsabfrage
+            if(UiDialogHelper.showConfirmDialog("Schlüssel löschen?", key, "willst du den Schlüssel wirklich löschen?")) {
+
+                //loeschen
+                db.del(key);
+
+                //Tree aktualisieren
+                keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+            }
+        }
     }
 
     public static String getCurrentKey() {

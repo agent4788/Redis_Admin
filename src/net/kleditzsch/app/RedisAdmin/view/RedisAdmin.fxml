@@ -45,6 +45,7 @@
                                     <KeyCodeCombination alt="UP" code="F5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator>
                               </MenuItem>
+                              <MenuItem fx:id="deleteTreeContextMenuItem" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>
