@@ -71,13 +71,13 @@ public class KeyTreeViewModel {
 
                         //existiert nicht
                         TreeItem<String> item = null;
-                        if(keyParts.length > i) {
+                        if(keyParts.length > i + 1) {
 
                             Node folder = new ImageView(folderImage);
                             item = new TreeItem<>(keyParts[i], folder);
                         } else {
 
-                            Node data = new ImageView();
+                            Node data = new ImageView(dataImage);
                             item = new TreeItem<>(keyParts[i], data);
                         }
                         root.getChildren().add(item);
