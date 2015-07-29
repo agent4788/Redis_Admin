@@ -10,11 +10,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.kleditzsch.app.RedisAdmin.model.RedisConnectionManager;
 import net.kleditzsch.ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
@@ -26,6 +29,8 @@ import java.util.ResourceBundle;
 public class RedisAdminController {
 
     protected static String currentKey = "";
+
+    protected static RedisAdminController rac = null;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -65,6 +70,9 @@ public class RedisAdminController {
     void initialize() {
         assert connectionChooser != null : "fx:id=\"connectionChooser\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
         assert keyTree != null : "fx:id=\"keyTree\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
+
+        //Referenz auf eigenes objekt speichern
+        rac = this;
 
         //Schluessel einlesen
         keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
@@ -132,7 +140,7 @@ public class RedisAdminController {
     }
 
     @FXML
-    void clickReloadMenuItem(ActionEvent event) {
+    public void clickReloadMenuItem(ActionEvent event) {
 
         //Schluessel einlesen
         keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
@@ -161,6 +169,20 @@ public class RedisAdminController {
         }
     }
 
+    @FXML
+    void clickAddKeyMenuItem(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("AddKeyView/AddKeyDialog.fxml"));
+
+        Stage dialog = new Stage();
+        dialog.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(root, 500, 500);
+        dialog.setScene(scene);
+        dialog.setTitle("neuer Schlüssel");
+        dialog.showAndWait();
+
+    }
+
     public static String getCurrentKey() {
 
         return RedisAdminController.currentKey;
@@ -169,5 +191,10 @@ public class RedisAdminController {
     protected static void setCurrentKey(String currentKey) {
 
         RedisAdminController.currentKey = currentKey;
+    }
+
+    public static RedisAdminController getInstance() {
+
+        return rac;
     }
 }

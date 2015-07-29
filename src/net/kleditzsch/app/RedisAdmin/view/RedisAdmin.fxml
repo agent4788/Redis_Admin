@@ -18,6 +18,11 @@
               <MenuItem mnemonicParsing="false" onAction="#clickExitMenuItem" text="beenden" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Bearbeiten">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="?">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#clickAboutMenuItem" text="Über" />
@@ -45,7 +50,9 @@
                                     <KeyCodeCombination alt="UP" code="F5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator>
                               </MenuItem>
-                              <MenuItem fx:id="deleteTreeContextMenuItem" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel" />
+                              <MenuItem fx:id="deleteTreeContextMenuItem" disable="true" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>
