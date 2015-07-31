@@ -51,7 +51,6 @@
                                  </accelerator>
                               </MenuItem>
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel" />
                               <MenuItem fx:id="deleteTreeContextMenuItem" disable="true" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen" />
                           </items>
                         </ContextMenu>
