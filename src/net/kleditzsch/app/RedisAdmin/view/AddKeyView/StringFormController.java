@@ -75,6 +75,21 @@ public class StringFormController {
         }
         //Formulardaten speichern
         Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //pruefen ob der Schluessel schon existiert
+        if(db.exists(key)) {
+
+            //Abfrage ob der Schluessel ueberschrieben werden soll
+            if(!UiDialogHelper.showConfirmDialog("Schlüssel existiert bereits", key, "soll der Schlüssel überschrieben werden?")) {
+
+                return;
+            }
+
+            //alten Schluessel loeschen
+            db.del(key);
+        }
+
+        //Format auswaehlen
         if(encoding.equals("Zahl")) {
 
             //als Zahl
