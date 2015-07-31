@@ -33,7 +33,7 @@ public class AddKeyDialogController {
         assert typeChoiceBox != null : "fx:id=\"typeChoiceBox\" was not injected: check your FXML file 'AddKeyDialog.fxml'.";
 
         //Auswahelemente Registrieren
-        typeChoiceBox.setItems(FXCollections.observableArrayList("String", "Hash", "Set", "List", "ZList"));
+        typeChoiceBox.setItems(FXCollections.observableArrayList("String", "Hash", "List", "Set", "ZSet"));
 
         //default auswahl
         typeChoiceBox.getSelectionModel().selectFirst();
@@ -70,14 +70,18 @@ public class AddKeyDialogController {
                         root = FXMLLoader.load(getClass().getResource(fxmlFile));
                         layout.setCenter(root);
                         break;
-                    case "Set":
-
-                        //Set Formular
-                        break;
                     case "List":
 
                         //List Formular
+                        fxmlFile = "ListForm.fxml";
+                        root = FXMLLoader.load(getClass().getResource(fxmlFile));
+                        layout.setCenter(root);
                         break;
+                    case "Set":
+
+                        //Set Formular
+
+                    break;
                     case "ZList":
 
                         //ZList Formular
