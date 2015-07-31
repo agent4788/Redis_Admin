@@ -59,7 +59,6 @@ public class AddKeyDialogController {
                     case "String":
 
                         //String Formular
-
                         fxmlFile = "StringForm.fxml";
                         root = FXMLLoader.load(getClass().getResource(fxmlFile));
                         layout.setCenter(root);
@@ -67,6 +66,9 @@ public class AddKeyDialogController {
                     case "Hash":
 
                         //Hash Formular
+                        fxmlFile = "HashForm.fxml";
+                        root = FXMLLoader.load(getClass().getResource(fxmlFile));
+                        layout.setCenter(root);
                         break;
                     case "Set":
 
