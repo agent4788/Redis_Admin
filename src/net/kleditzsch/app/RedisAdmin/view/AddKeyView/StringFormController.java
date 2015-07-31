@@ -73,6 +73,7 @@ public class StringFormController {
             UiDialogHelper.showErrorDialog("Fehlerhafte Eingaben", null, "Fehlerhafte Eingaben im Formular");
             return;
         }
+
         //Formulardaten speichern
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
