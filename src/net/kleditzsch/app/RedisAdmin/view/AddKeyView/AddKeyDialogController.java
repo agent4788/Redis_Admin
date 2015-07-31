@@ -84,9 +84,12 @@ public class AddKeyDialogController {
                         root = FXMLLoader.load(getClass().getResource(fxmlFile));
                         layout.setCenter(root);
                     break;
-                    case "ZList":
+                    case "ZSet":
 
                         //ZList Formular
+                        fxmlFile = "ZSetForm.fxml";
+                        root = FXMLLoader.load(getClass().getResource(fxmlFile));
+                        layout.setCenter(root);
                         break;
                 }
             } catch (IOException e) {
