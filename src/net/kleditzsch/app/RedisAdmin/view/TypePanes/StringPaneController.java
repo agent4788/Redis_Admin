@@ -5,10 +5,7 @@ package net.kleditzsch.app.RedisAdmin.view.TypePanes;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import net.kleditzsch.app.RedisAdmin.model.RedisConnectionManager;
 import net.kleditzsch.app.RedisAdmin.view.KeyTreeViewModel;
 import net.kleditzsch.app.RedisAdmin.view.RedisAdminController;
@@ -49,8 +46,8 @@ public class StringPaneController {
     @FXML // fx:id="keyLabelTooltip"
     private Tooltip keyLabelTooltip; // Value injected by FXMLLoader
 
-    @FXML // fx:id="editButton"
-    private Button editButton; // Value injected by FXMLLoader
+    @FXML // fx:id="editMenuItem"
+    private MenuItem editMenuItem; // Value injected by FXMLLoader
 
     @FXML
     void clickDeleteButton(ActionEvent event) {
@@ -79,19 +76,19 @@ public class StringPaneController {
     }
 
     @FXML
-    void clickEditButton(ActionEvent event) {
+    void clickEditMenuItem(ActionEvent event) {
 
         if(editState == false) {
 
             //bearbeiten starten
             contentTextArea.setEditable(true);
-            editButton.setText("speichern");
+            editMenuItem.setText("speichern");
             editState = true;
         } else {
 
             //bearbeiten beenden
             contentTextArea.setEditable(false);
-            editButton.setText("bearbeiten");
+            editMenuItem.setText("bearbeiten");
             editState = false;
 
             //Speichern
