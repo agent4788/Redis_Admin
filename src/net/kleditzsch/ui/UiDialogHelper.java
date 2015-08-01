@@ -1,10 +1,7 @@
 package net.kleditzsch.ui;
 
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
@@ -67,7 +64,7 @@ public class UiDialogHelper {
     }
 
     /**
-     * zeigt einen EIngabe-Dialog an
+     * zeigt einen Eingabe-Dialog an
      *
      * @param title   Titel
      * @param header  Kopfzeile
@@ -86,6 +83,44 @@ public class UiDialogHelper {
             return true;
         }
         return false;
+    }
+
+    /**
+     * zeigt einen Text Eingabedialog an
+     *
+     * @param title Titel
+     * @param header Kopfzeile
+     * @param contentText Bezeichner des Eingabefeldes
+     * @return
+     */
+    public static String showTextInputDialog(String title, String header, String contentText) {
+
+        return UiDialogHelper.showTextInputDialog(title, header, contentText, "");
+    }
+
+    /**
+     * zeigt einen Text Eingabedialog an
+     *
+     * @param title Titel
+     * @param header Kopfzeile
+     * @param contentText Bezeichner des Eingabefeldes
+     * @param defaultValue Startwert
+     * @return
+     */
+    public static String showTextInputDialog(String title, String header, String contentText, String defaultValue) {
+
+        TextInputDialog dialog = new TextInputDialog(defaultValue);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setContentText(contentText);
+
+        //Dialog anzeigen und auf eingabe Warten
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+
+            return result.get();
+        }
+        return defaultValue;
     }
 
     /**
