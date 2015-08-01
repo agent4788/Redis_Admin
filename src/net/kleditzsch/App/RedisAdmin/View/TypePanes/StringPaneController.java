@@ -164,7 +164,7 @@ public class StringPaneController {
 
         //TTL
         long ttl = db.ttl(key);
-        ttlLabel.setText((ttl == -1 ? "keine" : Long.toString(ttl)));
+        ttlLabel.setText((ttl == -1 ? "keine" : Long.toString(ttl) + " Sekunden"));
 
         //Encoding
         encodingLabel.setText(db.objectEncoding(key));
@@ -174,5 +174,53 @@ public class StringPaneController {
 
         //Content
         contentTextArea.setText(value);
+    }
+
+    @FXML
+    void clickEditTtlButton(ActionEvent event) {
+
+        //Schluessel laden
+        String key = RedisAdminController.getCurrentKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //aktuelle TTL laden
+        Long ttl = db.ttl(key);
+
+        //Dialog anzeigen
+        String value = UiDialogHelper.showTextInputDialog("TTL bearbeiten", "-1 um die TTL zu deaktivieren", "TTL:", Long.toString(ttl));
+
+        //Eingabe überpruefen
+        try {
+
+            int newTtl = Integer.parseInt(value);
+
+            if(newTtl == -1) {
+
+                //TTL deaktivieren
+                db.persist(key);
+
+                //Label anpassen
+                ttlLabel.setText("keine");
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("TTL des String \"" + key + "\" deaktiviert");
+            } else {
+
+                //ablaufzeit setzen
+                db.expire(key, newTtl);
+
+                //Label anpassen
+                ttlLabel.setText(value + " Sekunden");
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("TTL des String \"" + key + "\" auf " + newTtl + " Sekunden gesetzt");
+            }
+        } catch (NumberFormatException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, value + " ist keine Zahl");
+            return;
+        }
     }
 }
