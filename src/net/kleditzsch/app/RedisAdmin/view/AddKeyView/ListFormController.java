@@ -92,6 +92,9 @@ public class ListFormController {
 
             //Tree zum neu Laden anstosen
             RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+            //Log Eintrag schreiben
+            RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" als Typ \"List\" erstellt");
         } else {
 
             UiDialogHelper.showErrorDialog("Fehler beim erstellen der Liste", null, "Fehler beim erstellen der Liste");

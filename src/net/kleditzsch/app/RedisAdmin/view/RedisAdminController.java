@@ -11,10 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -24,6 +21,8 @@ import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class RedisAdminController {
@@ -31,6 +30,8 @@ public class RedisAdminController {
     protected static String currentKey = "";
 
     protected static RedisAdminController rac = null;
+
+    protected DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -49,6 +50,9 @@ public class RedisAdminController {
 
     @FXML // fx:id="deleteTreeContextMenuItem"
     private MenuItem deleteTreeContextMenuItem; // Value injected by FXMLLoader
+
+    @FXML // fx:id="logList"
+    private ListView<String> logList; // Value injected by FXMLLoader
 
     @FXML
     void clickAboutMenuItem(ActionEvent event) {
@@ -76,6 +80,12 @@ public class RedisAdminController {
 
         //Schluessel einlesen
         keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+
+        //Vebindungs Log schreiben
+        String host = RedisConnectionManager.getInstance().getCurrentConnectedHost();
+        int port = RedisConnectionManager.getInstance().getCurrentConnectedPort();
+        int dbIndex = RedisConnectionManager.getInstance().getCurrentConnectedBatabase();
+        this.addLogEntry("Verbindung mit " + host + ":" + port + " hergestellt, Datenbank " + dbIndex + " selektiert");
 
         //SelectionListener anmelden
         keyTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
@@ -165,6 +175,9 @@ public class RedisAdminController {
 
                 //Tree aktualisieren
                 keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+
+                //Log Eintrag schreiben
+                this.addLogEntry("Schlüssel \"" + key + "\" gelöscht");
             }
         }
     }
@@ -181,6 +194,11 @@ public class RedisAdminController {
         dialog.setTitle("neuer Schlüssel");
         dialog.showAndWait();
 
+    }
+
+    public void addLogEntry(String content) {
+
+        logList.getItems().add(LocalTime.now().format(format) + ": " + content);
     }
 
     public static String getCurrentKey() {

@@ -71,6 +71,9 @@ public class StringPaneController {
 
                 //Tree aktualisieren
                 RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+                //Log Eintrag schreiben
+                RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" gelöscht");
             }
         }
     }
@@ -102,6 +105,9 @@ public class StringPaneController {
 
                 //Size
                 sizeLabel.setText(Integer.toString(contentTextArea.getText().length()) + " Zeichen");
+
+                //Log Eintrag schreiben
+                RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" bearbeitet");
             } else {
 
                 UiDialogHelper.showErrorDialog("Bearbeiten Fehlgeschlagen", key, "Der Wert des Schlüssels konnte nicht gespeichert werden");
@@ -125,6 +131,9 @@ public class StringPaneController {
             if(db.rename(key, newKey).equals("OK")) {
 
                 RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+                //Log Eintrag schreiben
+                RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" in \"" + newKey + "\" umbenannt");
             } else {
 
                 UiDialogHelper.showErrorDialog("Fehler", key, "Der Schlüssel konnte nicht umbenannt werden");

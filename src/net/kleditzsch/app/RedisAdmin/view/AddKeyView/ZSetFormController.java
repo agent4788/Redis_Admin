@@ -116,6 +116,9 @@ public class ZSetFormController {
 
             //Tree zum neu Laden anstosen
             RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+            //Log Eintrag schreiben
+            RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" als Typ \"ZSet\" erstellt");
         } else {
 
             UiDialogHelper.showErrorDialog("Fehler beim erstellen des ZSet", null, "Fehler beim erstellen des ZSet");

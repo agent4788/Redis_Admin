@@ -34,6 +34,21 @@ public class RedisConnectionManager {
         return currentConnection;
     }
 
+    public String getCurrentConnectedHost() {
+
+        return "localhost";
+    }
+
+    public int getCurrentConnectedPort() {
+
+        return 6379;
+    }
+
+    public int getCurrentConnectedBatabase() {
+
+        return dbIndex;
+    }
+
     public String getKeyDelimiter() {
 
         return keyDelimiter;

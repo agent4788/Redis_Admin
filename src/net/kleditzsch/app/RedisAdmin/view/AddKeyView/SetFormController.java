@@ -92,6 +92,9 @@ public class SetFormController {
 
             //Tree zum neu Laden anstosen
             RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+            //Log Eintrag schreiben
+            RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" als Typ \"Set\" erstellt");
         } else {
 
             UiDialogHelper.showErrorDialog("Fehler beim erstellen des Set", null, "Fehler beim erstellen des Set");

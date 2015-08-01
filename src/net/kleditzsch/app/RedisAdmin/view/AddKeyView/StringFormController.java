@@ -124,6 +124,9 @@ public class StringFormController {
 
         //Tree zum neu Laden anstosen
         RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+        //Log Eintrag schreiben
+        RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" als Typ \"String\" erstellt");
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
