@@ -5,15 +5,22 @@ package net.kleditzsch.App.RedisAdmin.View.TypePanes;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.HashEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
 import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -100,6 +107,11 @@ public class HashPaneController {
         assert keyColumn != null : "fx:id=\"keyColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
         assert valueColumn != null : "fx:id=\"valueColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
 
+        loadHashData();
+    }
+
+    protected void loadHashData() {
+
         //Breite der Message Zeile ist immer der zur verfuegung stehende restliche Raum
         this.valueColumn.prefWidthProperty().bind(this.hashTable.widthProperty().subtract(keyColumn.getWidth() + 2));
 
@@ -118,6 +130,7 @@ public class HashPaneController {
         String key = RedisAdminController.getCurrentKey();
 
         //Daten der Tabelle uebergeben
+        hashTable.getItems().clear();
         Map<String, String> value = db.hgetAll(key);
         for(String hashKey : value.keySet()) {
 
@@ -132,7 +145,7 @@ public class HashPaneController {
 
         //TTL
         long ttl = db.ttl(key);
-        ttlLabel.setText((ttl == -1 ? "keine" : Long.toString(ttl)));
+        ttlLabel.setText((ttl == -1 ? "keine" : Long.toString(ttl) + " Sekunden"));
 
         //Encoding
         encodingLabel.setText(db.objectEncoding(key));
@@ -144,7 +157,7 @@ public class HashPaneController {
     @FXML
     void clickDeleteButton(ActionEvent event) {
 
-        //Sluessel laden
+        //Schluessel laden
         String key = RedisAdminController.getCurrentKey();
 
         //Datenbankobjekt holen
@@ -163,6 +176,9 @@ public class HashPaneController {
 
                 //Log Eintrag schreiben
                 RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" gelöscht");
+
+                //Hash Daten erneuern
+                loadHashData();
             }
         }
     }
@@ -170,7 +186,7 @@ public class HashPaneController {
     @FXML
     void clickRenameButton(ActionEvent event) {
 
-        //Sluessel laden
+        //Schluessel laden
         String key = RedisAdminController.getCurrentKey();
 
         //Datenbankobjekt holen
@@ -186,6 +202,9 @@ public class HashPaneController {
 
                 //Log Eintrag schreiben
                 RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" in \"" + newKey + "\" umbenannt");
+
+                //Hash Daten erneuern
+                loadHashData();
             } else {
 
                 UiDialogHelper.showErrorDialog("Fehler", key, "Der Schlüssel konnte nicht umbenannt werden");
@@ -196,15 +215,175 @@ public class HashPaneController {
     @FXML
     void clickAddMenuItem(ActionEvent event) {
 
+        //Selektierter Eintrag
+        HashEntry entry = hashTable.getSelectionModel().getSelectedItem();
+
+        //Schluessel laden
+        String key = RedisAdminController.getCurrentKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //Editor Fenster vorbereiten
+        HashEntryEditDialogController.setHashKey("");
+        HashEntryEditDialogController.setValue("");
+
+        //FXML Laden
+        try {
+
+            Parent root = FXMLLoader.load(getClass().getResource("../Dialog/HashEntryEditDialog.fxml"));
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            Scene scene = new Scene(root, 500, 400);
+            dialog.setScene(scene);
+            dialog.setTitle("Hash Eintrag bearbeiten");
+            dialog.showAndWait();
+
+            if(HashEntryEditDialogController.isSaveButtonClicked()) {
+
+                //neue Daten speichern
+                String hashKey = HashEntryEditDialogController.getHashKey();
+                String hashValue = HashEntryEditDialogController.getValue();
+
+                db.hset(key, hashKey, hashValue);
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("Eintrag \"" + hashKey + "\" des Hash \"" + key + "\" erstellt");
+
+                //Hash Daten erneuern
+                loadHashData();
+                return;
+            }
+        } catch (IOException ex) {
+
+            UiDialogHelper.showErrorDialog("laden einer FXML Datei Fehlgeschlagen", "HashEntryEditDialog.fxml", "konnte nicht geladen werden");
+            return;
+        }
     }
 
     @FXML
     void clickDeleteMenuItem(ActionEvent event) {
 
+        //Selektierter Eintrag
+        HashEntry entry = hashTable.getSelectionModel().getSelectedItem();
+
+        //Schluessel laden
+        String key = RedisAdminController.getCurrentKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        if(db.hdel(key, entry.getKey()) == 1) {
+
+            //Log Eintrag
+            RedisAdminController.getInstance().addLogEntry("Eintrag \"" + entry.getKey() + "\" des Hash \"" + key + "\" gelöscht");
+
+            //Hash Daten erneuern
+            loadHashData();
+        } else {
+
+            UiDialogHelper.showErrorDialog("Der Eintrag konnte nicht gelöscht werden", null, key + " -> " + entry.getKey());
+        }
     }
 
     @FXML
     void clickEditMenuItem(ActionEvent event) {
 
+        //Selektierter Eintrag
+        HashEntry entry = hashTable.getSelectionModel().getSelectedItem();
+
+        //Schluessel laden
+        String key = RedisAdminController.getCurrentKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        String value = db.hget(key, entry.getKey());
+
+        //Editor Fenster vorbereiten
+        HashEntryEditDialogController.setHashKey(entry.getKey());
+        HashEntryEditDialogController.setValue(value);
+
+        //FXML Laden
+        try {
+
+            Parent root = FXMLLoader.load(getClass().getResource("../Dialog/HashEntryEditDialog.fxml"));
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            Scene scene = new Scene(root, 500, 400);
+            dialog.setScene(scene);
+            dialog.setTitle("Hash Eintrag bearbeiten");
+            dialog.showAndWait();
+
+            if(HashEntryEditDialogController.isSaveButtonClicked()) {
+
+                //neue Daten speichern
+                String hashKey = HashEntryEditDialogController.getHashKey();
+                String hashValue = HashEntryEditDialogController.getValue();
+
+                db.hset(key, hashKey, hashValue);
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("Eintrag \"" + hashKey + "\" des Hash \"" + key + "\" bearbeitet");
+
+                //Hash Daten erneuern
+                loadHashData();
+                return;
+            }
+        } catch (IOException ex) {
+
+            UiDialogHelper.showErrorDialog("laden einer FXML Datei Fehlgeschlagen", "HashEntryEditDialog.fxml", "konnte nicht geladen werden");
+            return;
+        }
+    }
+
+    @FXML
+    void clickEditTtlButton(ActionEvent event) {
+
+        //Schluessel laden
+        String key = RedisAdminController.getCurrentKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //aktuelle TTL laden
+        Long ttl = db.ttl(key);
+
+        //Dialog anzeigen
+        String value = UiDialogHelper.showTextInputDialog("TTL bearbeiten", "-1 um die TTL zu deaktivieren", "TTL:", Long.toString(ttl));
+
+        //Eingabe überpruefen
+        try {
+
+            int newTtl = Integer.parseInt(value);
+
+            if(newTtl == -1) {
+
+                //TTL deaktivieren
+                db.persist(key);
+
+                //Label anpassen
+                ttlLabel.setText("keine");
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("TTL des Hash \"" + key + "\" deaktiviert");
+            } else {
+
+                //ablaufzeit setzen
+                db.expire(key, newTtl);
+
+                //Label anpassen
+                ttlLabel.setText(value + " Sekunden");
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("TTL des Hash \"" + key + "\" auf " + newTtl + " Sekunden gesetzt");
+            }
+        } catch (NumberFormatException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, value + " ist keine Zahl");
+            return;
+        }
     }
 }

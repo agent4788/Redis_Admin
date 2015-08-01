@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.kleditzsch.App.RedisAdmin.View.Dialog.HashEntryEditDialogController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="85.0" prefWidth="85.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="415.0" prefWidth="415.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="300.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <FlowPane alignment="CENTER_RIGHT" maxHeight="50.0" maxWidth="1.7976931348623157E308" prefHeight="50.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+         <children>
+            <Button fx:id="cancleButton" cancelButton="true" mnemonicParsing="false" onAction="#clickCancleButton" text="abbrechen">
+               <FlowPane.margin>
+                  <Insets bottom="10.0" left="10.0" top="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#clickSaveButton" text="speichern">
+               <FlowPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </FlowPane.margin>
+            </Button>
+         </children>
+      </FlowPane>
+      <Label text="Hash Key: ">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <TextField fx:id="hashKeyTextField" maxWidth="1.7976931348623157E308" promptText="Hash Schlüssel ..." GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </TextField>
+      <TextArea fx:id="valueTextField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Hash value ..." GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </TextArea>
+   </children>
+</GridPane>
