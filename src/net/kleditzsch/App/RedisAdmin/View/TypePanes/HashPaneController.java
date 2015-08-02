@@ -4,16 +4,20 @@ package net.kleditzsch.App.RedisAdmin.View.TypePanes;
  */
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.HashEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
@@ -64,6 +68,8 @@ public class HashPaneController {
         }
     };
 
+    protected String key = "";
+
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -106,6 +112,9 @@ public class HashPaneController {
         assert hashTable != null : "fx:id=\"hashTable\" was not injected: check your FXML file 'HashPane.fxml'.";
         assert keyColumn != null : "fx:id=\"keyColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
         assert valueColumn != null : "fx:id=\"valueColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
+    }
+
+    public void init() {
 
         loadHashData();
     }
@@ -127,7 +136,7 @@ public class HashPaneController {
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         //Schluessel
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Daten der Tabelle uebergeben
         hashTable.getItems().clear();
@@ -158,7 +167,7 @@ public class HashPaneController {
     void clickDeleteButton(ActionEvent event) {
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -187,7 +196,7 @@ public class HashPaneController {
     void clickRenameButton(ActionEvent event) {
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -219,32 +228,31 @@ public class HashPaneController {
         HashEntry entry = hashTable.getSelectionModel().getSelectedItem();
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
-        //Editor Fenster vorbereiten
-        HashEntryEditDialogController.setHashKey("");
-        HashEntryEditDialogController.setValue("");
-
         //FXML Laden
         try {
 
-            Parent root = FXMLLoader.load(getClass().getResource("../Dialog/HashEntryEditDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../Dialog/HashEntryEditDialog.fxml"));
+            Parent root = loader.load();
+            HashEntryEditDialogController controller = loader.getController();
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 400);
             dialog.setScene(scene);
             dialog.setTitle("Hash Eintrag bearbeiten");
+            dialog.initModality(Modality.WINDOW_MODAL);
             dialog.showAndWait();
 
-            if(HashEntryEditDialogController.isSaveButtonClicked()) {
+            if(controller.isSaveButtonClicked()) {
 
                 //neue Daten speichern
-                String hashKey = HashEntryEditDialogController.getHashKey();
-                String hashValue = HashEntryEditDialogController.getValue();
+                String hashKey = controller.getHashKey();
+                String hashValue = controller.getValue();
 
                 db.hset(key, hashKey, hashValue);
 
@@ -269,7 +277,7 @@ public class HashPaneController {
         HashEntry entry = hashTable.getSelectionModel().getSelectedItem();
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -294,21 +302,23 @@ public class HashPaneController {
         HashEntry entry = hashTable.getSelectionModel().getSelectedItem();
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         String value = db.hget(key, entry.getKey());
 
-        //Editor Fenster vorbereiten
-        HashEntryEditDialogController.setHashKey(entry.getKey());
-        HashEntryEditDialogController.setValue(value);
-
         //FXML Laden
         try {
 
-            Parent root = FXMLLoader.load(getClass().getResource("../Dialog/HashEntryEditDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../Dialog/HashEntryEditDialog.fxml"));
+            Parent root = loader.load();
+            HashEntryEditDialogController controller = loader.getController();
+
+            //Controller vorbereiten
+            controller.setHashKey(entry.getKey());
+            controller.setValue(value);
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
@@ -317,11 +327,12 @@ public class HashPaneController {
             dialog.setTitle("Hash Eintrag bearbeiten");
             dialog.showAndWait();
 
-            if(HashEntryEditDialogController.isSaveButtonClicked()) {
+            //vor dem Schliesen noch speichern
+            if(controller.isSaveButtonClicked()) {
 
                 //neue Daten speichern
-                String hashKey = HashEntryEditDialogController.getHashKey();
-                String hashValue = HashEntryEditDialogController.getValue();
+                String hashKey = controller.getHashKey();
+                String hashValue = controller.getValue();
 
                 db.hset(key, hashKey, hashValue);
 
@@ -343,7 +354,7 @@ public class HashPaneController {
     void clickEditTtlButton(ActionEvent event) {
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -385,5 +396,15 @@ public class HashPaneController {
             UiDialogHelper.showErrorDialog("Fehler", null, value + " ist keine Zahl");
             return;
         }
+    }
+
+    public String getKey() {
+
+        return key;
+    }
+
+    public void setKey(String key) {
+
+        this.key = key;
     }
 }

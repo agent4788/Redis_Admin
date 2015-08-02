@@ -16,11 +16,11 @@ import net.kleditzsch.Ui.UiDialogHelper;
 
 public class HashEntryEditDialogController {
 
-    protected static String hashKey = "";
+    protected String hashKey = "";
 
-    protected static String value = "";
+    protected String value = "";
 
-    protected static boolean isSaveButtonClicked = false;
+    protected boolean isSaveButtonClicked = false;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -52,9 +52,9 @@ public class HashEntryEditDialogController {
 
         if(key != null && !key.isEmpty()) {
 
-            HashEntryEditDialogController.isSaveButtonClicked = true;
-            HashEntryEditDialogController.hashKey = key;
-            HashEntryEditDialogController.value = value;
+            this.isSaveButtonClicked = true;
+            this.hashKey = key;
+            this.value = value;
         } else {
 
             UiDialogHelper.showErrorDialog("Fehlerhafte Eingaben", null, "Fehlerhafte Eingaben im Formular");
@@ -71,9 +71,9 @@ public class HashEntryEditDialogController {
         assert hashKeyTextField != null : "fx:id=\"hashKeyTextField\" was not injected: check your FXML file 'HashEntryEditDialog.fxml'.";
         assert valueTextField != null : "fx:id=\"valueTextField\" was not injected: check your FXML file 'HashEntryEditDialog.fxml'.";
 
-        hashKeyTextField.setText(HashEntryEditDialogController.hashKey);
-        valueTextField.setText(HashEntryEditDialogController.value);
-        HashEntryEditDialogController.isSaveButtonClicked = false;
+        hashKeyTextField.setText(this.hashKey);
+        valueTextField.setText(this.value);
+        this.isSaveButtonClicked = false;
 
         hashKeyTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -87,27 +87,29 @@ public class HashEntryEditDialogController {
         });
     }
 
-    public static String getHashKey() {
+    public String getHashKey() {
 
         return hashKey;
     }
 
-    public static void setHashKey(String hashKey) {
+    public void setHashKey(String hashKey) {
 
-        HashEntryEditDialogController.hashKey = hashKey;
+        this.hashKey = hashKey;
+        this.hashKeyTextField.setText(this.hashKey);
     }
 
-    public static String getValue() {
+    public String getValue() {
 
         return value;
     }
 
-    public static void setValue(String value) {
+    public void setValue(String value) {
 
-        HashEntryEditDialogController.value = value;
+        this.value = value;
+        this.valueTextField.setText(this.value);
     }
 
-    public static boolean isSaveButtonClicked() {
+    public boolean isSaveButtonClicked() {
 
         return isSaveButtonClicked;
     }

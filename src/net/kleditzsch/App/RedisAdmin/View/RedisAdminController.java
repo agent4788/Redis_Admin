@@ -16,6 +16,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
+import net.kleditzsch.App.RedisAdmin.View.TypePanes.HashPaneController;
+import net.kleditzsch.App.RedisAdmin.View.TypePanes.ListPaneController;
+import net.kleditzsch.App.RedisAdmin.View.TypePanes.StringPaneController;
 import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
 
@@ -104,6 +107,7 @@ public class RedisAdminController {
 
                         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
+                        FXMLLoader loader = null;
                         Parent root = null;
                         RedisAdminController.setCurrentKey(key);
                         String type = db.type(key);
@@ -111,23 +115,53 @@ public class RedisAdminController {
 
                             case "string":
 
-                                root = FXMLLoader.load(getClass().getResource("TypePanes/StringPane.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("TypePanes/StringPane.fxml"));
+                                root = loader.load();
+
+                                //Key Setzen
+                                StringPaneController controller1 = loader.getController();
+                                controller1.setKey(key);
+                                controller1.init();;
                                 break;
                             case "hash":
 
-                                root = FXMLLoader.load(getClass().getResource("TypePanes/HashPane.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("TypePanes/HashPane.fxml"));
+                                root = loader.load();
+
+                                //Key Setzen
+                                HashPaneController controller2 = loader.getController();
+                                controller2.setKey(key);
+                                controller2.init();
                                 break;
                             case "list":
 
-                                root = FXMLLoader.load(getClass().getResource("TypePanes/ListPane.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("TypePanes/ListPane.fxml"));
+                                root = loader.load();
+
+                                //Key Setzen
+                                ListPaneController controller3 = loader.getController();
+                                controller3.setKey(key);
+                                controller3.init();
                                 break;
                             case "set":
 
-                                root = FXMLLoader.load(getClass().getResource("TypePanes/SetPane.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("TypePanes/SetPane.fxml"));
+                                root = loader.load();
+
+                                //Key Setzen
+                                ListPaneController controller4 = loader.getController();
+                                controller4.setKey(key);
+                                controller4.init();
                                 break;
                             case "zset":
 
-                                root = FXMLLoader.load(getClass().getResource("TypePanes/ZsetPane.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("TypePanes/ZsetPane.fxml"));
+                                root = loader.load();
+
+                                //Key Setzen
+                                ListPaneController controller5 = loader.getController();
+                                controller5.setKey(key);
+                                controller5.init();
                                 break;
                         }
 
@@ -135,6 +169,8 @@ public class RedisAdminController {
 
                             keyView.setCenter(root);
                         }
+
+                        //Shluessel setzen
                     } catch (IOException e) {
 
                         UiDialogHelper.showExceptionDialog(e);

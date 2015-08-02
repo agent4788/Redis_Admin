@@ -16,6 +16,8 @@ import java.util.Set;
 
 public class SetPaneController {
 
+    protected String key = "";
+
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -50,12 +52,20 @@ public class SetPaneController {
         assert sizeLabel != null : "fx:id=\"sizeLabel\" was not injected: check your FXML file 'SetPane.fxml'.";
         assert keyLabel != null : "fx:id=\"keyLabel\" was not injected: check your FXML file 'SetPane.fxml'.";
         assert setList != null : "fx:id=\"setList\" was not injected: check your FXML file 'SetPane.fxml'.";
+    }
+
+    public void init() {
+
+        loadSetData();
+    }
+
+    protected void loadSetData() {
 
         //Daten ermitteln und setzen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         //Schluessel
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Daten der Tabelle uebergeben
         Set<String> set = db.smembers(key);
@@ -79,5 +89,15 @@ public class SetPaneController {
 
         //Size
         sizeLabel.setText(Integer.toString(set.size()) + " Einträge");
+    }
+
+    public String getKey() {
+
+        return key;
+    }
+
+    public void setKey(String key) {
+
+        this.key = key;
     }
 }

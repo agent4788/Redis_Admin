@@ -55,6 +55,8 @@ public class ZsetPaneController {
         }
     };
 
+    protected String key = "";
+
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -108,12 +110,20 @@ public class ZsetPaneController {
         this.valueColumn.setCellValueFactory(
                 new PropertyValueFactory<>("value")
         );
+    }
+
+    public void init() {
+
+        loadZsetData();
+    }
+
+    protected void loadZsetData() {
 
         //Daten ermitteln und setzen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         //Schluessel
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Daten der Tabelle uebergeben
         Set<String> value = db.zrange(key, 0L, -1L);
@@ -137,5 +147,15 @@ public class ZsetPaneController {
 
         //Size
         sizeLabel.setText(Integer.toString(value.size()) + " Einträge");
+    }
+
+    public String getKey() {
+
+        return key;
+    }
+
+    public void setKey(String key) {
+
+        this.key = key;
     }
 }

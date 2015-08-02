@@ -54,6 +54,8 @@ public class ListPaneController {
         }
     };
 
+    protected String key = "";
+
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -105,12 +107,20 @@ public class ListPaneController {
         this.valueColumn.setCellValueFactory(
                 new PropertyValueFactory<>("value")
         );
+    }
+
+    public void init() {
+
+        loadListData();
+    }
+
+    protected void loadListData() {
 
         //Daten ermitteln und setzen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         //Schluessel
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Daten der Tabelle uebergeben
         Long length = db.llen(key);
@@ -134,5 +144,15 @@ public class ListPaneController {
 
         //Size
         sizeLabel.setText(Long.toString(length) + " Einträge");
+    }
+
+    public String getKey() {
+
+        return key;
+    }
+
+    public void setKey(String key) {
+
+        this.key = key;
     }
 }

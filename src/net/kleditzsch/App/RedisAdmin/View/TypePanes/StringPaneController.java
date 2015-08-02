@@ -16,6 +16,8 @@ import java.util.ResourceBundle;
 
 public class StringPaneController {
 
+    protected String key = "";
+
     protected boolean editState = false;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
@@ -93,7 +95,7 @@ public class StringPaneController {
             //Speichern
 
             //Sluessel laden
-            String key = RedisAdminController.getCurrentKey();
+            String key = this.getKey();
 
             //Datenbankobjekt holen
             Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -115,7 +117,7 @@ public class StringPaneController {
     void clickRenameButton(ActionEvent event) {
 
         //Sluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -138,49 +140,10 @@ public class StringPaneController {
     }
 
     @FXML
-    // This method is called by the FXMLLoader when initialization is complete
-    void initialize() {
-
-        assert typeLabel != null : "fx:id=\"typeLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
-        assert ttlLabel != null : "fx:id=\"ttlLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
-        assert encodingLabel != null : "fx:id=\"encodingLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
-        assert sizeLabel != null : "fx:id=\"sizeLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
-        assert contentTextArea != null : "fx:id=\"contentTextArea\" was not injected: check your FXML file 'StringPane.fxml'.";
-        assert keyLabel != null : "fx:id=\"keyLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
-
-        //Daten ermitteln und setzen
-        Jedis db = RedisConnectionManager.getInstance().getConnection();
-
-        //Schluessel
-        String key = RedisAdminController.getCurrentKey();
-        String value = db.get(key);
-
-        //Schluessel
-        keyLabel.setText(key);
-        keyLabelTooltip.setText(key);
-
-        //Typ
-        typeLabel.setText("String");
-
-        //TTL
-        long ttl = db.ttl(key);
-        ttlLabel.setText((ttl == -1 ? "keine" : Long.toString(ttl) + " Sekunden"));
-
-        //Encoding
-        encodingLabel.setText(db.objectEncoding(key));
-
-        //Size
-        sizeLabel.setText(Integer.toString(value.length()) + " Zeichen");
-
-        //Content
-        contentTextArea.setText(value);
-    }
-
-    @FXML
     void clickEditTtlButton(ActionEvent event) {
 
         //Schluessel laden
-        String key = RedisAdminController.getCurrentKey();
+        String key = this.getKey();
 
         //Datenbankobjekt holen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -222,5 +185,62 @@ public class StringPaneController {
             UiDialogHelper.showErrorDialog("Fehler", null, value + " ist keine Zahl");
             return;
         }
+    }
+
+    @FXML
+        // This method is called by the FXMLLoader when initialization is complete
+    void initialize() {
+
+        assert typeLabel != null : "fx:id=\"typeLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
+        assert ttlLabel != null : "fx:id=\"ttlLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
+        assert encodingLabel != null : "fx:id=\"encodingLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
+        assert sizeLabel != null : "fx:id=\"sizeLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
+        assert contentTextArea != null : "fx:id=\"contentTextArea\" was not injected: check your FXML file 'StringPane.fxml'.";
+        assert keyLabel != null : "fx:id=\"keyLabel\" was not injected: check your FXML file 'StringPane.fxml'.";
+    }
+
+    public void init() {
+
+        loadStringData();
+    }
+
+    protected void loadStringData() {
+
+        //Daten ermitteln und setzen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //Schluessel
+        String key = this.getKey();
+        String value = db.get(key);
+
+        //Schluessel
+        keyLabel.setText(key);
+        keyLabelTooltip.setText(key);
+
+        //Typ
+        typeLabel.setText("String");
+
+        //TTL
+        long ttl = db.ttl(key);
+        ttlLabel.setText((ttl == -1 ? "keine" : Long.toString(ttl) + " Sekunden"));
+
+        //Encoding
+        encodingLabel.setText(db.objectEncoding(key));
+
+        //Size
+        sizeLabel.setText(Integer.toString(value.length()) + " Zeichen");
+
+        //Content
+        contentTextArea.setText(value);
+    }
+
+    public String getKey() {
+
+        return key;
+    }
+
+    public void setKey(String key) {
+
+        this.key = key;
     }
 }
