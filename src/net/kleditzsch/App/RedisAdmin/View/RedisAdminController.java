@@ -16,9 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
-import net.kleditzsch.App.RedisAdmin.View.TypePanes.HashPaneController;
-import net.kleditzsch.App.RedisAdmin.View.TypePanes.ListPaneController;
-import net.kleditzsch.App.RedisAdmin.View.TypePanes.StringPaneController;
+import net.kleditzsch.App.RedisAdmin.View.TypePanes.*;
 import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
 
@@ -149,7 +147,7 @@ public class RedisAdminController {
                                 root = loader.load();
 
                                 //Key Setzen
-                                ListPaneController controller4 = loader.getController();
+                                SetPaneController controller4 = loader.getController();
                                 controller4.setKey(key);
                                 controller4.init();
                                 break;
@@ -159,7 +157,7 @@ public class RedisAdminController {
                                 root = loader.load();
 
                                 //Key Setzen
-                                ListPaneController controller5 = loader.getController();
+                                ZsetPaneController controller5 = loader.getController();
                                 controller5.setKey(key);
                                 controller5.init();
                                 break;
