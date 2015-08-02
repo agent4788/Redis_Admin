@@ -398,6 +398,12 @@ public class HashPaneController {
         }
     }
 
+    @FXML
+    void clickReloadButton(ActionEvent event) {
+
+        loadHashData();
+    }
+
     public String getKey() {
 
         return key;
