@@ -3,15 +3,26 @@ package net.kleditzsch.App.RedisAdmin.View.TypePanes;
  * Created by oliver on 21.07.15.
  */
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.SetEntryEditDialogController;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.ZSetEditScoreDialogController;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.ZSetEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
+import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -88,7 +99,246 @@ public class ZsetPaneController {
     private TableColumn<ZsetEntry, String> valueColumn; // Value injected by FXMLLoader
 
     @FXML
-        // This method is called by the FXMLLoader when initialization is complete
+    void clickAddMenuItem(ActionEvent event) {
+
+        //Schluessel laden
+        String key = this.getKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //FXML Laden
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../Dialog/ZSetEntryEditDialog.fxml"));
+            Parent root = loader.load();
+            ZSetEntryEditDialogController controller = loader.getController();
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            Scene scene = new Scene(root, 500, 400);
+            dialog.setScene(scene);
+            dialog.setTitle("ZSet Eintrag erstellen");
+            dialog.showAndWait();
+
+            if(controller.isSaveButtonClicked()) {
+
+                //neue Daten speichern
+                Double score = controller.getScore();
+                String value = controller.getValue();
+
+                if(db.zadd(key, score, value) == 1) {
+
+                    //Log Eintrag
+                    String val = (value.length() < 20 ? value : value.substring(0, 20) + " ...");
+                    RedisAdminController.getInstance().addLogEntry("Eintrag \"" + val + "\" des ZSet \"" + key + "\" erstellt");
+                } else {
+
+                    //Log Eintrag
+                    String val = (value.length() < 20 ? value : value.substring(0, 20) + " ...");
+                    RedisAdminController.getInstance().addLogEntry("Eintrag \"" + val + "\" ist bereits im ZSet \"" + key + "\" vorhanden");
+                }
+
+                //Hash Daten erneuern
+                loadZsetData();
+                return;
+            }
+        } catch (IOException ex) {
+
+            UiDialogHelper.showErrorDialog("laden einer FXML Datei Fehlgeschlagen", "SetEntryEditDialogController.fxml", "konnte nicht geladen werden");
+            return;
+        }
+    }
+
+    @FXML
+    void editScoreMenuItem(ActionEvent event) {
+
+        //Schluessel laden
+        String key = this.getKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //Selektierten Eintrag abfragen
+        ZsetEntry entry = hashTable.getSelectionModel().getSelectedItem();
+
+        //aktuellen score abfragen
+        Double currentScore = db.zscore(key, entry.getValue());
+
+        //Eingabedialog oeffnen
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../Dialog/ZSetEditScoreDialog.fxml"));
+            Parent root = loader.load();
+            ZSetEditScoreDialogController controller = loader.getController();
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            Scene scene = new Scene(root, 500, 80);
+            dialog.setScene(scene);
+            dialog.setTitle("ZSet Eintrag erstellen");
+            dialog.showAndWait();
+
+            if(controller.isSaveButtonClicked()) {
+
+                //neue Daten speichern
+                Double score = controller.getScore();
+
+                db.zadd(key, score, entry.getValue());
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("Der Score \"" + currentScore + "\" des ZSet \"" + key + "\" wurde in \"" + score + "\" geändert");
+
+                //Hash Daten erneuern
+                loadZsetData();
+                return;
+            }
+        } catch (IOException ex) {
+
+            UiDialogHelper.showErrorDialog("laden einer FXML Datei Fehlgeschlagen", "ZSetEditScoreDialog.fxml", "konnte nicht geladen werden");
+            return;
+        }
+
+    }
+
+    @FXML
+    void clickDeleteMenuItem(ActionEvent event) {
+
+        //Schluessel laden
+        String key = this.getKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //Selektierten Eintrag abfragen
+        ZsetEntry entry = hashTable.getSelectionModel().getSelectedItem();
+
+        //Eintrag loeschen
+        db.srem(key, entry.getValue());
+
+        //Log Eintrag
+        String val = (entry.getValue().length() < 20 ? entry.getValue() : entry.getValue().substring(0, 20) + " ...");
+        RedisAdminController.getInstance().addLogEntry("Eintrag \"" + val + "\" des ZSet \"" + key + "\" gelöscht");
+
+        //Hash Daten erneuern
+        loadZsetData();
+        return;
+    }
+
+    @FXML
+    void clickDeleteButton(ActionEvent event) {
+
+        //Schluessel laden
+        String key = this.getKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        if(key != null && key != "" && db.exists(key)) {
+
+            //Sicherheitsabfrage
+            if(UiDialogHelper.showConfirmDialog("Schlüssel löschen?", key, "willst du den Schlüssel wirklich löschen?")) {
+
+                //loeschen
+                db.del(key);
+
+                //Tree aktualisieren
+                RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+                //Log Eintrag schreiben
+                RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" gelöscht");
+
+                //Hash Daten erneuern
+                loadZsetData();
+            }
+        }
+    }
+
+    @FXML
+    void clickEditTtlButton(ActionEvent event) {
+
+        //Schluessel laden
+        String key = this.getKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        //aktuelle TTL laden
+        Long ttl = db.ttl(key);
+
+        //Dialog anzeigen
+        String value = UiDialogHelper.showTextInputDialog("TTL bearbeiten", "-1 um die TTL zu deaktivieren", "TTL:", Long.toString(ttl));
+
+        //Eingabe überpruefen
+        try {
+
+            int newTtl = Integer.parseInt(value);
+
+            if(newTtl == -1) {
+
+                //TTL deaktivieren
+                db.persist(key);
+
+                //Label anpassen
+                ttlLabel.setText("keine");
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("TTL des ZSet \"" + key + "\" deaktiviert");
+            } else {
+
+                //ablaufzeit setzen
+                db.expire(key, newTtl);
+
+                //Label anpassen
+                ttlLabel.setText(value + " Sekunden");
+
+                //Log Eintrag
+                RedisAdminController.getInstance().addLogEntry("TTL des ZSet \"" + key + "\" auf " + newTtl + " Sekunden gesetzt");
+            }
+        } catch (NumberFormatException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, value + " ist keine Zahl");
+            return;
+        }
+    }
+
+    @FXML
+    void clickReloadButton(ActionEvent event) {
+
+        loadZsetData();
+    }
+
+    @FXML
+    void clickRenameButton(ActionEvent event) {
+
+        //Schluessel laden
+        String key = this.getKey();
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        String newKey = UiDialogHelper.showTextInputDialog("Schlüssel umbenennen", key, "neuer Schlüssel: ", key);
+        if(newKey != null && !newKey.isEmpty()) {
+
+            //umbenennen
+            if(db.rename(key, newKey).equals("OK")) {
+
+                RedisAdminController.getInstance().clickReloadMenuItem(new ActionEvent());
+
+                //Log Eintrag schreiben
+                RedisAdminController.getInstance().addLogEntry("Schlüssel \"" + key + "\" in \"" + newKey + "\" umbenannt");
+
+                //Hash Daten erneuern
+                loadZsetData();
+            } else {
+
+                UiDialogHelper.showErrorDialog("Fehler", key, "Der Schlüssel konnte nicht umbenannt werden");
+            }
+        }
+    }
+
+    @FXML
+    // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
 
         assert typeLabel != null : "fx:id=\"typeLabel\" was not injected: check your FXML file 'ZsetPane.fxml'.";
@@ -126,6 +376,7 @@ public class ZsetPaneController {
         String key = this.getKey();
 
         //Daten der Tabelle uebergeben
+        hashTable.getItems().clear();
         Set<String> value = db.zrange(key, 0L, -1L);
         for(String val : value) {
 
