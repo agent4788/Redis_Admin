@@ -13,7 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import net.kleditzsch.Ui.UiDialogHelper;
 
-public class SetEntryEditDialog {
+public class SetEntryEditDialogController {
 
     protected String value = "";
 
@@ -59,8 +59,8 @@ public class SetEntryEditDialog {
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
-        assert valueTextField != null : "fx:id=\"valueTextField\" was not injected: check your FXML file 'SetEntryEditDialog.fxml'.";
-        assert cancleButton != null : "fx:id=\"cancleButton\" was not injected: check your FXML file 'SetEntryEditDialog.fxml'.";
+        assert valueTextField != null : "fx:id=\"valueTextField\" was not injected: check your FXML file 'SetEntryEditDialogController.fxml'.";
+        assert cancleButton != null : "fx:id=\"cancleButton\" was not injected: check your FXML file 'SetEntryEditDialogController.fxml'.";
 
         valueTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 

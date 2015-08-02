@@ -13,8 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
-import net.kleditzsch.App.RedisAdmin.View.Dialog.HashEntryEditDialogController;
-import net.kleditzsch.App.RedisAdmin.View.Dialog.SetEntryEditDialog;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.SetEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
 import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
@@ -66,7 +65,7 @@ public class SetPaneController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../Dialog/SetEntryEditDialog.fxml"));
             Parent root = loader.load();
-            SetEntryEditDialog controller = loader.getController();
+            SetEntryEditDialogController controller = loader.getController();
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
@@ -98,7 +97,7 @@ public class SetPaneController {
             }
         } catch (IOException ex) {
 
-            UiDialogHelper.showErrorDialog("laden einer FXML Datei Fehlgeschlagen", "SetEntryEditDialog.fxml", "konnte nicht geladen werden");
+            UiDialogHelper.showErrorDialog("laden einer FXML Datei Fehlgeschlagen", "SetEntryEditDialogController.fxml", "konnte nicht geladen werden");
             return;
         }
     }
