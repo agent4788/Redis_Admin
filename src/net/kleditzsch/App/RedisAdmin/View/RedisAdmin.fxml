@@ -33,16 +33,22 @@
       </MenuBar>
    </top>
    <center>
-      <SplitPane dividerPositions="0.35370741482965934" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.3333" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="90.0" prefWidth="237.0">
+            <BorderPane maxWidth="500.0">
+               <top>
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="237.0" BorderPane.alignment="CENTER">
                      <children>
-                        <ComboBox fx:id="connectionChooser" prefHeight="26.0" prefWidth="270.0" />
+                        <ComboBox fx:id="connectionChooser" prefHeight="26.0" prefWidth="270.0">
+                           <FlowPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </FlowPane.margin>
+                        </ComboBox>
                      </children>
                   </FlowPane>
-                  <TreeView fx:id="keyTree" prefHeight="767.0" prefWidth="237.0">
+               </top>
+               <center>
+                  <TreeView fx:id="keyTree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="767.0" prefWidth="237.0" BorderPane.alignment="CENTER">
                      <contextMenu>
                         <ContextMenu>
                           <items>
@@ -55,26 +61,38 @@
                               <MenuItem fx:id="deleteTreeContextMenuItem" disable="true" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen" />
                           </items>
                         </ContextMenu>
-                     </contextMenu></TreeView>
-               </children>
-            </VBox>
-            <BorderPane fx:id="keyView" prefHeight="769.0" prefWidth="717.0">
-               <bottom>
-                  <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Label text="Log:">
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ListView fx:id="logList" prefHeight="159.0" prefWidth="641.0">
-                           <VBox.margin>
+                     </contextMenu>
+                  </TreeView>
+               </center>
+            </BorderPane>
+            <SplitPane dividerPositions="0.7" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+               <items>
+                  <BorderPane fx:id="keyView" prefHeight="769.0" prefWidth="717.0" />
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <top>
+                        <FlowPane BorderPane.alignment="CENTER">
+                           <children>
+                              <Label text="Log:">
+                                 <FlowPane.margin>
+                                    <Insets top="10.0" />
+                                 </FlowPane.margin>
+                              </Label>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets left="10.0" />
+                           </BorderPane.margin>
+                        </FlowPane>
+                     </top>
+                     <center>
+                        <ListView fx:id="logList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="159.0" prefWidth="641.0" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-                           </VBox.margin>
+                           </BorderPane.margin>
                         </ListView>
-                     </children>
-                  </VBox>
-               </bottom></BorderPane>
+                     </center>
+                  </BorderPane>
+               </items>
+            </SplitPane>
          </items>
       </SplitPane>
    </center>
