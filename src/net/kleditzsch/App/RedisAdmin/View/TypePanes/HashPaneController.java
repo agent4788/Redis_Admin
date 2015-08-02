@@ -245,7 +245,6 @@ public class HashPaneController {
             Scene scene = new Scene(root, 500, 400);
             dialog.setScene(scene);
             dialog.setTitle("Hash Eintrag bearbeiten");
-            dialog.initModality(Modality.WINDOW_MODAL);
             dialog.showAndWait();
 
             if(controller.isSaveButtonClicked()) {
