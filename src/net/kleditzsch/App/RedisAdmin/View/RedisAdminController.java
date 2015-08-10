@@ -15,7 +15,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.kleditzsch.App.RedisAdmin.Model.RedisConnection;
+import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionList;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.SettingsDialogController;
 import net.kleditzsch.App.RedisAdmin.View.TypePanes.*;
 import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
@@ -41,7 +44,7 @@ public class RedisAdminController {
     private URL location;
 
     @FXML // fx:id="connectionChooser"
-    private ComboBox<?> connectionChooser; // Value injected by FXMLLoader
+    private ComboBox<String> connectionChooser; // Value injected by FXMLLoader
 
     @FXML // fx:id="keyTree"
     private TreeView<String> keyTree; // Value injected by FXMLLoader
@@ -69,6 +72,31 @@ public class RedisAdminController {
     @FXML
     void clickSettingsMenuItem(ActionEvent event) {
 
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Dialog/SettingsDialog.fxml"));
+            Parent root = loader.load();
+            SettingsDialogController controller = loader.getController();
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            Scene scene = new Scene(root, 800, 600);
+            dialog.setScene(scene);
+            dialog.setTitle("Einstellungen");
+            dialog.showAndWait();
+
+            //Auswahlöliste der Verbindungen initalisieren
+            RedisConnectionList redisConnectionList = RedisConnectionManager.getInstance().getConnectionsList();
+            connectionChooser.getItems().clear();
+            for(RedisConnection rc : redisConnectionList.getRedisConnection()) {
+
+                connectionChooser.getItems().add(rc.getName());
+            }
+            connectionChooser.getSelectionModel().selectFirst();
+        } catch(IOException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, "Die FXML Datei \"SettingsDialog.fxml\" konnte nicht geladen werden");
+        }
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -79,14 +107,38 @@ public class RedisAdminController {
         //Referenz auf eigenes objekt speichern
         rac = this;
 
-        //Schluessel einlesen
-        keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
-
         //Vebindungs Log schreiben
         String host = RedisConnectionManager.getInstance().getCurrentConnectedHost();
         int port = RedisConnectionManager.getInstance().getCurrentConnectedPort();
-        int dbIndex = RedisConnectionManager.getInstance().getCurrentConnectedBatabase();
+        int dbIndex = RedisConnectionManager.getInstance().getCurrentConnectedDatabase();
         this.addLogEntry("Verbindung mit " + host + ":" + port + " hergestellt, Datenbank " + dbIndex + " selektiert");
+
+        //Change Listener anbinden
+        connectionChooser.getSelectionModel().selectedIndexProperty().addListener((ov, oldIndex, newIndex) -> {
+
+            //Verbindung aufbauen
+            if(newIndex.intValue() >= 0) {
+
+                RedisConnection rc = RedisConnectionManager.getInstance().getConnectionsList().get(newIndex.intValue());
+                if(!RedisConnectionManager.getInstance().switchConnection(rc)) {
+
+                    UiDialogHelper.showErrorDialog("Fehler", null, "Verbindung zu \"" + rc.getName() + "\" nicht möglich");
+                    return;
+                }
+
+                //Baumaktualisieren
+                keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+            }
+        });
+
+        //Auswahlöliste der Verbindungen initalisieren
+        RedisConnectionList redisConnectionList = RedisConnectionManager.getInstance().getConnectionsList();
+        connectionChooser.getItems().clear();
+        for(RedisConnection rc : redisConnectionList.getRedisConnection()) {
+
+            connectionChooser.getItems().add(rc.getName());
+        }
+        connectionChooser.getSelectionModel().selectFirst();
 
         //SelectionListener anmelden
         keyTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
@@ -171,8 +223,7 @@ public class RedisAdminController {
                         //Shluessel setzen
                     } catch (IOException e) {
 
-                        UiDialogHelper.showExceptionDialog(e);
-                        //UiDialogHelper.showErrorDialog("Fehler", null, "Eine FXML Datei konnte nicht gelesen werden");
+                        UiDialogHelper.showErrorDialog("Fehler", null, "Eine FXML Datei konnte nicht gelesen werden");
                     }
                 } else {
 
@@ -227,7 +278,6 @@ public class RedisAdminController {
         dialog.setScene(scene);
         dialog.setTitle("neuer Schlüssel");
         dialog.showAndWait();
-
     }
 
     public void addLogEntry(String content) {
