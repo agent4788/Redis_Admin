@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import net.kleditzsch.App.RedisAdmin.View.RedisAdmin;
 import net.kleditzsch.Ui.UiDialogHelper;
 
 public class AboutDialogController {
@@ -71,5 +72,6 @@ public class AboutDialogController {
         assert versionLabel != null : "fx:id=\"versionLabel\" was not injected: check your FXML file 'AboutDialog.fxml'.";
         assert cancleButton != null : "fx:id=\"closeButton\" was not injected: check your FXML file 'AboutDialog.fxml'.";
 
+        versionLabel.setText(RedisAdmin.VERSION);
     }
 }

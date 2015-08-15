@@ -14,6 +14,8 @@ import java.io.IOException;
 
 public class RedisAdmin extends Application {
 
+    public final static String VERSION = "1.0.0";
+
     public static void main(String[] args) {
         launch(args);
     }
