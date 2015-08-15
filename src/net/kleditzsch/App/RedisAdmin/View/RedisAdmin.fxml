@@ -22,6 +22,7 @@
             <Menu mnemonicParsing="false" text="Bearbeiten">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickTruncateDatabase" text="Datenbanl leeren" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="?">

@@ -294,6 +294,22 @@ public class RedisAdminController {
         dialog.showAndWait();
     }
 
+    @FXML
+    void clickTruncateDatabase(ActionEvent event) {
+
+        if(UiDialogHelper.showConfirmDialog("Datenbank leeren?", null, "sollen wirklich alle Schlüssel aus der Datenbank gelöscht werden?")) {
+
+            Jedis db = RedisConnectionManager.getInstance().getConnection();
+            db.flushDB();
+
+            //Log schreiben
+            this.addLogEntry("die Datenbank " + RedisConnectionManager.getInstance().getDbIndex() + " von Host " + RedisConnectionManager.getInstance().getCurrentConnectedHost() + " wurde geleert");
+
+            //Baum neu laden
+            this.clickReloadMenuItem(event);
+        }
+    }
+
     public void addLogEntry(String content) {
 
         logList.getItems().add(LocalTime.now().format(format) + ": " + content);
