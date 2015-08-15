@@ -60,7 +60,21 @@ public class RedisAdminController {
 
     @FXML
     void clickAboutMenuItem(ActionEvent event) {
+        try {
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Dialog/AboutDialog.fxml"));
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            Scene scene = new Scene(root, 500, 170);
+            dialog.setScene(scene);
+            dialog.setTitle("Über");
+            dialog.showAndWait();
+        } catch(IOException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, "Die FXML Datei \"AboutDialog.fxml\" konnte nicht geladen werden");
+        }
     }
 
     @FXML
