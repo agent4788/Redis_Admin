@@ -113,6 +113,68 @@ public class RedisAdminController {
         }
     }
 
+    @FXML
+    public void clickReloadMenuItem(ActionEvent event) {
+
+        //Schluessel einlesen
+        keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+    }
+
+    @FXML
+    void clickDeleteTreeItem(ActionEvent event) {
+
+        //Schluessel finden
+        String key = KeyTreeViewModel.getInstance().getKey(keyTree.getSelectionModel().getSelectedItem());
+
+        //Datenbankobjekt holen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+
+        if(key != null && key != "" && db.exists(key)) {
+
+            //Sicherheitsabfrage
+            if(UiDialogHelper.showConfirmDialog("Schlüssel löschen?", key, "willst du den Schlüssel wirklich löschen?")) {
+
+                //loeschen
+                db.del(key);
+
+                //Tree aktualisieren
+                keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+
+                //Log Eintrag schreiben
+                this.addLogEntry("Schlüssel \"" + key + "\" gelöscht");
+            }
+        }
+    }
+
+    @FXML
+    void clickAddKeyMenuItem(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("Dialog/AddKeyView/AddKeyDialog.fxml"));
+
+        Stage dialog = new Stage();
+        dialog.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(root, 500, 500);
+        dialog.setScene(scene);
+        dialog.setTitle("neuer Schlüssel");
+        dialog.showAndWait();
+    }
+
+    @FXML
+    void clickTruncateDatabase(ActionEvent event) {
+
+        if(UiDialogHelper.showConfirmDialog("Datenbank leeren?", null, "sollen wirklich alle Schlüssel aus der Datenbank gelöscht werden?")) {
+
+            Jedis db = RedisConnectionManager.getInstance().getConnection();
+            db.flushDB();
+
+            //Log schreiben
+            this.addLogEntry("die Datenbank " + RedisConnectionManager.getInstance().getDbIndex() + " von Host " + RedisConnectionManager.getInstance().getCurrentConnectedHost() + " wurde geleert");
+
+            //Baum neu laden
+            this.clickReloadMenuItem(event);
+        }
+    }
+
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert connectionChooser != null : "fx:id=\"connectionChooser\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
@@ -248,71 +310,9 @@ public class RedisAdminController {
         });
     }
 
-    @FXML
-    public void clickReloadMenuItem(ActionEvent event) {
-
-        //Schluessel einlesen
-        keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
-    }
-
-    @FXML
-    void clickDeleteTreeItem(ActionEvent event) {
-
-        //Schluessel finden
-        String key = KeyTreeViewModel.getInstance().getKey(keyTree.getSelectionModel().getSelectedItem());
-
-        //Datenbankobjekt holen
-        Jedis db = RedisConnectionManager.getInstance().getConnection();
-
-        if(key != null && key != "" && db.exists(key)) {
-
-            //Sicherheitsabfrage
-            if(UiDialogHelper.showConfirmDialog("Schlüssel löschen?", key, "willst du den Schlüssel wirklich löschen?")) {
-
-                //loeschen
-                db.del(key);
-
-                //Tree aktualisieren
-                keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
-
-                //Log Eintrag schreiben
-                this.addLogEntry("Schlüssel \"" + key + "\" gelöscht");
-            }
-        }
-    }
-
-    @FXML
-    void clickAddKeyMenuItem(ActionEvent event) throws IOException {
-
-        Parent root = FXMLLoader.load(getClass().getResource("Dialog/AddKeyView/AddKeyDialog.fxml"));
-
-        Stage dialog = new Stage();
-        dialog.initStyle(StageStyle.UTILITY);
-        Scene scene = new Scene(root, 500, 500);
-        dialog.setScene(scene);
-        dialog.setTitle("neuer Schlüssel");
-        dialog.showAndWait();
-    }
-
-    @FXML
-    void clickTruncateDatabase(ActionEvent event) {
-
-        if(UiDialogHelper.showConfirmDialog("Datenbank leeren?", null, "sollen wirklich alle Schlüssel aus der Datenbank gelöscht werden?")) {
-
-            Jedis db = RedisConnectionManager.getInstance().getConnection();
-            db.flushDB();
-
-            //Log schreiben
-            this.addLogEntry("die Datenbank " + RedisConnectionManager.getInstance().getDbIndex() + " von Host " + RedisConnectionManager.getInstance().getCurrentConnectedHost() + " wurde geleert");
-
-            //Baum neu laden
-            this.clickReloadMenuItem(event);
-        }
-    }
-
     public void addLogEntry(String content) {
 
-        logList.getItems().add(LocalTime.now().format(format) + ": " + content);
+        logList.getItems().add(0, LocalTime.now().format(format) + ": " + content);
     }
 
     public static String getCurrentKey() {
