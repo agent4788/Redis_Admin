@@ -121,12 +121,6 @@ public class RedisAdminController {
         //Referenz auf eigenes objekt speichern
         rac = this;
 
-        //Vebindungs Log schreiben
-        String host = RedisConnectionManager.getInstance().getCurrentConnectedHost();
-        int port = RedisConnectionManager.getInstance().getCurrentConnectedPort();
-        int dbIndex = RedisConnectionManager.getInstance().getCurrentConnectedDatabase();
-        this.addLogEntry("Verbindung mit " + host + ":" + port + " hergestellt, Datenbank " + dbIndex + " selektiert");
-
         //Change Listener anbinden
         connectionChooser.getSelectionModel().selectedIndexProperty().addListener((ov, oldIndex, newIndex) -> {
 
@@ -142,6 +136,12 @@ public class RedisAdminController {
 
                 //Baumaktualisieren
                 keyTree.setRoot(KeyTreeViewModel.getInstance().getKeyList());
+
+                //Log schreiben
+                String host = RedisConnectionManager.getInstance().getCurrentConnectedHost();
+                int port = RedisConnectionManager.getInstance().getCurrentConnectedPort();
+                int dbIndex = RedisConnectionManager.getInstance().getCurrentConnectedDatabase();
+                this.addLogEntry("Verbindung mit " + host + ":" + port + " hergestellt, Datenbank " + dbIndex + " selektiert");
             }
         });
 
