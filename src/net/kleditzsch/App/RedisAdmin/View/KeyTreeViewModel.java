@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
  */
 public class KeyTreeViewModel {
 
+    protected TreeItem<String> root = null;
+
     HashMap<String, TreeItem<String>> map = new HashMap<>();
 
     private static KeyTreeViewModel ourInstance = new KeyTreeViewModel();
@@ -48,7 +50,7 @@ public class KeyTreeViewModel {
         String delimiter = RedisConnectionManager.getInstance().getKeyDelimiter();
 
         //Root Element erstellen
-        TreeItem<String> root = new TreeItem<>("DB-" + Integer.toString(RedisConnectionManager.getInstance().getDbIndex()), database);
+        root = new TreeItem<>("DB-" + Integer.toString(RedisConnectionManager.getInstance().getDbIndex()), database);
         root.setExpanded(true);
 
         //Baumstruktur erstellen
@@ -133,6 +135,11 @@ public class KeyTreeViewModel {
         }
 
         return null;
+    }
+
+    public TreeItem<String> getRootElement() {
+
+        return root;
     }
 
     /**

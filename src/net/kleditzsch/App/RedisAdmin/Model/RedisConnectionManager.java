@@ -12,7 +12,12 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by oliver on 19.07.15.
@@ -137,6 +142,49 @@ public class RedisConnectionManager {
             }
             JAXB.marshal(redisConnectionList, configurationFile.toFile());
         }
+    }
+
+    public Map<String, Map<String, String>> getServerInfoForCurrentConnection() {
+
+        //Map erstellen
+        Map<String, Map<String, String>> sections = new HashMap<>();
+
+        //Datenbankinfo laden und einlesen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+        String serverInfo = db.info();
+
+        String[] serverInfoParts = serverInfo.split("\n");
+
+        String section = "";
+        Map<String, String> sectionMap = new HashMap<>();
+        for(int i = 0; i < serverInfoParts.length; i++) {
+
+            String part = serverInfoParts[i].trim();
+
+            //Neue Sektion
+            if(part.startsWith("#")) {
+
+                section = part.substring(2).trim();
+                if(!sections.keySet().contains(section)) {
+
+                    sectionMap = new HashMap<>();
+                    sections.put(section, sectionMap);
+                }
+                continue;
+            }
+
+            //Eintrag
+            Matcher m = Pattern.compile("^([^:]+):(.+)$").matcher(part);
+            if(m.find()) {
+
+                String key = m.group(1).trim();
+                String value = m.group(2).trim();
+                sectionMap.put(key, value);
+                continue;
+            }
+        }
+
+        return sections;
     }
 
     public RedisConnectionList getConnectionsList() {

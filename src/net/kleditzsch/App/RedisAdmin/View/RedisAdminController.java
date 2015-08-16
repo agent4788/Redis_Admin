@@ -142,6 +142,9 @@ public class RedisAdminController {
 
                 //Log Eintrag schreiben
                 this.addLogEntry("Schlüssel \"" + key + "\" gelöscht");
+
+                //auf Server Info umschalten
+                showServerInfo();
             }
         }
     }
@@ -204,6 +207,7 @@ public class RedisAdminController {
                 int port = RedisConnectionManager.getInstance().getCurrentConnectedPort();
                 int dbIndex = RedisConnectionManager.getInstance().getCurrentConnectedDatabase();
                 this.addLogEntry("Verbindung mit " + host + ":" + port + " hergestellt, Datenbank " + dbIndex + " selektiert");
+                showServerInfo();
             }
         });
 
@@ -221,6 +225,12 @@ public class RedisAdminController {
 
             @Override
             public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue, TreeItem<String> newValue) {
+
+                //Server Info Anzeugen beim Root Element
+                if(newValue != null && newValue.equals(KeyTreeViewModel.getInstance().getRootElement())) {
+
+                    showServerInfo();
+                }
 
                 KeyTreeViewModel model = KeyTreeViewModel.getInstance();
                 String key = model.getKey(newValue);
@@ -308,6 +318,19 @@ public class RedisAdminController {
                 }
             }
         });
+    }
+
+    protected void showServerInfo() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ServerInfo/ServerInfo.fxml"));
+            Parent root = loader.load();
+            keyView.setCenter(root);
+        } catch (IOException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, "Eine FXML Datei konnte nicht gelesen werden");
+        }
     }
 
     public void addLogEntry(String content) {
