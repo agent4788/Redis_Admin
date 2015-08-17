@@ -121,7 +121,7 @@ public abstract class TimeUtil {
             output = "jetzt";
         }
 
-        return output;
+        return output.trim();
     }
 
     /**
@@ -193,6 +193,6 @@ public abstract class TimeUtil {
             output = "jetzt";
         }
 
-        return output;
+        return output.trim();
     }
 }
