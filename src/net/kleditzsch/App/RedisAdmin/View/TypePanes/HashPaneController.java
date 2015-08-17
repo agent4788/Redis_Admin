@@ -4,20 +4,17 @@ package net.kleditzsch.App.RedisAdmin.View.TypePanes;
  */
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import net.kleditzsch.App.RedisAdmin.Backup.Data.Entrys.HashEntry;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.HashEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
@@ -31,42 +28,6 @@ import java.util.ResourceBundle;
 
 public class HashPaneController {
 
-    protected class HashEntry {
-
-        protected String key = "";
-
-        protected String value = "";
-
-        public HashEntry() {
-
-        }
-
-        public HashEntry(String key, String value) {
-
-            this.key = key;
-            this.value = value;
-        }
-
-        public String getKey() {
-
-            return key;
-        }
-
-        public void setKey(String key) {
-
-            this.key = key;
-        }
-
-        public String getValue() {
-
-            return value;
-        }
-
-        public void setValue(String value) {
-
-            this.value = value;
-        }
-    };
 
     protected String key = "";
 

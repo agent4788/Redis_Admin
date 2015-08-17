@@ -12,9 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.kleditzsch.App.RedisAdmin.Backup.Data.Entrys.ListEntry;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.ListEntryAddDialogController;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.ListEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
@@ -28,42 +28,6 @@ import java.util.ResourceBundle;
 
 public class ListPaneController {
 
-    protected class ListEntry {
-
-        protected long key = 0L;
-
-        protected String value = "";
-
-        public ListEntry() {
-
-        }
-
-        public ListEntry(long key, String value) {
-
-            this.key = key;
-            this.value = value;
-        }
-
-        public long getKey() {
-
-            return key;
-        }
-
-        public void setKey(long key) {
-
-            this.key = key;
-        }
-
-        public String getValue() {
-
-            return value;
-        }
-
-        public void setValue(String value) {
-
-            this.value = value;
-        }
-    };
 
     protected String key = "";
 

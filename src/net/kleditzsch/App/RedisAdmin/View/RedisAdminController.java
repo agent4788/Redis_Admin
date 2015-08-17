@@ -13,8 +13,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.kleditzsch.App.RedisAdmin.Backup.BackupExport;
+import net.kleditzsch.App.RedisAdmin.Backup.BackupImport;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnection;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionList;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
@@ -23,8 +26,12 @@ import net.kleditzsch.App.RedisAdmin.View.TypePanes.*;
 import net.kleditzsch.Ui.UiDialogHelper;
 import redis.clients.jedis.Jedis;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -32,6 +39,8 @@ import java.util.ResourceBundle;
 public class RedisAdminController {
 
     protected static String currentKey = "";
+
+    protected static Path lastSavePath = Paths.get(System.getProperty("user.home"), "backup.xml");
 
     protected static RedisAdminController rac = null;
 
@@ -178,6 +187,64 @@ public class RedisAdminController {
         }
     }
 
+    @FXML
+    void clickCreateBackupMenuItem(ActionEvent event) {
+
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Dateien", "*.xml", "*.XML"));
+        fc.setInitialDirectory(lastSavePath.getParent().toFile());
+        fc.setInitialFileName(lastSavePath.getFileName().toString());
+        System.out.println(lastSavePath.getFileName());
+        File choosedFile = fc.showSaveDialog(null);
+        if(choosedFile != null) {
+
+            lastSavePath = choosedFile.toPath();
+
+            //Datei loeschen
+            try {
+
+                Files.delete(lastSavePath);
+            } catch (IOException e) {
+
+                UiDialogHelper.showErrorDialog("Fehler", lastSavePath.getFileName().toString(), "Die Datei konnte nicht gelöscht werden");
+                return;
+            }
+
+            //Backup erstellen
+            if(BackupExport.exportBackup(lastSavePath)) {
+
+                addLogEntry("Backup der Datenbank " + RedisConnectionManager.getInstance().getDbIndex() + " erfolgreich in die Datei \"" + lastSavePath.getFileName() + "\" erstellt");
+                return;
+            }
+            UiDialogHelper.showErrorDialog("Fehler", null, "Fehle beim erstellen des Backups");
+        }
+    }
+
+    @FXML
+    void clickRestoreBackupMenuItem(ActionEvent event) {
+
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Dateien", "*.xml", "*.XML"));
+        fc.setInitialDirectory(lastSavePath.getParent().toFile());
+        fc.setInitialFileName(lastSavePath.getFileName().toString());
+        File choosedFile = fc.showOpenDialog(null);
+        if(choosedFile != null) {
+
+            lastSavePath = choosedFile.toPath();
+
+            //Backup wiederherstellen
+            if(BackupImport.importBackup(lastSavePath)) {
+
+                //UI Update
+                clickReloadMenuItem(event);
+                showServerInfo();
+                addLogEntry("Backup \"" + lastSavePath.getFileName() + "\" erfolgreich in die Datenbank " + RedisConnectionManager.getInstance().getDbIndex() + " wiederhergestellt");
+                return;
+            }
+            UiDialogHelper.showErrorDialog("Fehler", null, "Fehle beim wiederherstellen des Backups");
+        }
+    }
+
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert connectionChooser != null : "fx:id=\"connectionChooser\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
@@ -190,10 +257,10 @@ public class RedisAdminController {
         connectionChooser.getSelectionModel().selectedIndexProperty().addListener((ov, oldIndex, newIndex) -> {
 
             //Verbindung aufbauen
-            if(newIndex.intValue() >= 0) {
+            if (newIndex.intValue() >= 0) {
 
                 RedisConnection rc = RedisConnectionManager.getInstance().getConnectionsList().get(newIndex.intValue());
-                if(!RedisConnectionManager.getInstance().switchConnection(rc)) {
+                if (!RedisConnectionManager.getInstance().switchConnection(rc)) {
 
                     UiDialogHelper.showErrorDialog("Fehler", null, "Verbindung zu \"" + rc.getName() + "\" nicht möglich");
                     return;

@@ -22,7 +22,10 @@
             <Menu mnemonicParsing="false" text="Bearbeiten">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel" />
-                  <MenuItem mnemonicParsing="false" onAction="#clickTruncateDatabase" text="Datenbanl leeren" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickTruncateDatabase" text="Datenbank leeren" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickCreateBackupMenuItem" text="Backup erstellen" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickRestoreBackupMenuItem" text="Backup wiederherstellen" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="?">

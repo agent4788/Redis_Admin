@@ -14,8 +14,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.kleditzsch.App.RedisAdmin.Backup.Data.Entrys.ZSetEntry;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
-import net.kleditzsch.App.RedisAdmin.View.Dialog.SetEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.ZSetEditScoreDialogController;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.ZSetEntryEditDialogController;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
@@ -28,43 +28,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class ZsetPaneController {
-
-    protected class ZsetEntry {
-
-        protected Double key = 0.0;
-
-        protected String value = "";
-
-        public ZsetEntry() {
-
-        }
-
-        public ZsetEntry(Double key, String value) {
-
-            this.key = key;
-            this.value = value;
-        }
-
-        public Double getKey() {
-
-            return key;
-        }
-
-        public void setKey(Double key) {
-
-            this.key = key;
-        }
-
-        public String getValue() {
-
-            return value;
-        }
-
-        public void setValue(String value) {
-
-            this.value = value;
-        }
-    };
 
     protected String key = "";
 
@@ -90,13 +53,13 @@ public class ZsetPaneController {
     private Label keyLabel; // Value injected by FXMLLoader
 
     @FXML // fx:id="hashTable"
-    private TableView<ZsetEntry> hashTable; // Value injected by FXMLLoader
+    private TableView<ZSetEntry> hashTable; // Value injected by FXMLLoader
 
     @FXML // fx:id="keyColum"
-    private TableColumn<ZsetEntry, Double> keyColumn; // Value injected by FXMLLoader
+    private TableColumn<ZSetEntry, Double> keyColumn; // Value injected by FXMLLoader
 
     @FXML // fx:id="valueColum"
-    private TableColumn<ZsetEntry, String> valueColumn; // Value injected by FXMLLoader
+    private TableColumn<ZSetEntry, String> valueColumn; // Value injected by FXMLLoader
 
     @FXML
     void clickAddMenuItem(ActionEvent event) {
@@ -160,7 +123,7 @@ public class ZsetPaneController {
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         //Selektierten Eintrag abfragen
-        ZsetEntry entry = hashTable.getSelectionModel().getSelectedItem();
+        ZSetEntry entry = hashTable.getSelectionModel().getSelectedItem();
 
         //aktuellen score abfragen
         Double currentScore = db.zscore(key, entry.getValue());
@@ -211,7 +174,7 @@ public class ZsetPaneController {
         Jedis db = RedisConnectionManager.getInstance().getConnection();
 
         //Selektierten Eintrag abfragen
-        ZsetEntry entry = hashTable.getSelectionModel().getSelectedItem();
+        ZSetEntry entry = hashTable.getSelectionModel().getSelectedItem();
 
         //Eintrag loeschen
         db.srem(key, entry.getValue());
@@ -380,7 +343,7 @@ public class ZsetPaneController {
         Set<String> value = db.zrange(key, 0L, -1L);
         for(String val : value) {
 
-            hashTable.getItems().add(new ZsetEntry(db.zscore(key, val), val));
+            hashTable.getItems().add(new ZSetEntry(db.zscore(key, val), val));
         }
 
         //Schluessel
