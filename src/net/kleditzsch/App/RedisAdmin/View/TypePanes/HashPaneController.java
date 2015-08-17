@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Backup.Data.Entrys.HashEntry;
@@ -204,6 +205,7 @@ public class HashPaneController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 400);
+            dialog.getIcons().add(new Image(HashPaneController.class.getResourceAsStream("./../resource/add.png")));
             dialog.setScene(scene);
             dialog.setTitle("Hash Eintrag bearbeiten");
             dialog.showAndWait();
@@ -283,6 +285,7 @@ public class HashPaneController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 400);
+            dialog.getIcons().add(new Image(HashPaneController.class.getResourceAsStream("./../resource/edit.png")));
             dialog.setScene(scene);
             dialog.setTitle("Hash Eintrag bearbeiten");
             dialog.showAndWait();

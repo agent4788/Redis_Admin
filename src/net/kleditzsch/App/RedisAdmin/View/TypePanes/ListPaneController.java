@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Backup.Data.Entrys.ListEntry;
@@ -108,6 +109,7 @@ public class ListPaneController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 400);
+            dialog.getIcons().add(new Image(ListPaneController.class.getResourceAsStream("./../resource/add.png")));
             dialog.setScene(scene);
             dialog.setTitle("Listen Eintrag erstellen");
             dialog.showAndWait();
@@ -191,6 +193,7 @@ public class ListPaneController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 400);
+            dialog.getIcons().add(new Image(ListPaneController.class.getResourceAsStream("./../resource/edit.png")));
             dialog.setScene(scene);
             dialog.setTitle("Listen Eintrag bearbeiten");
             dialog.showAndWait();

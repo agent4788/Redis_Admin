@@ -42,9 +42,9 @@ public class KeyTreeViewModel {
         map.clear();
 
         //Icons
-        Node database = new ImageView(new Image(getClass().getResourceAsStream("recource/database.png")));
-        Image folderImage = new Image(getClass().getResourceAsStream("recource/folder.png"));
-        Image dataImage = new Image(getClass().getResourceAsStream("recource/data.png"));
+        Node database = new ImageView(new Image(getClass().getResourceAsStream("resource/database.png")));
+        Image folderImage = new Image(getClass().getResourceAsStream("resource/folder.png"));
+        Image dataImage = new Image(getClass().getResourceAsStream("resource/data.png"));
 
         //Trenner
         String delimiter = RedisConnectionManager.getInstance().getKeyDelimiter();

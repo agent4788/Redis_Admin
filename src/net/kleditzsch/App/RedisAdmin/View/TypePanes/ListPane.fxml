@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -64,9 +65,30 @@
          <contextMenu>
             <ContextMenu>
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#clickAddMenuItem" text="hinzufügen" />
-                  <MenuItem mnemonicParsing="false" onAction="#clickEditMenuItem" text="bearbeiten" />
-                  <MenuItem mnemonicParsing="false" onAction="#clickDeleteMenuItem" text="löschen" />
+                <MenuItem mnemonicParsing="false" onAction="#clickAddMenuItem" text="hinzufügen">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resource/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#clickEditMenuItem" text="bearbeiten">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resource/edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#clickDeleteMenuItem" text="löschen">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resource/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
               </items>
             </ContextMenu>
          </contextMenu>

@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -77,6 +78,7 @@ public class RedisAdminController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 170);
+            dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/help.png")));
             dialog.setScene(scene);
             dialog.setTitle("Über");
             dialog.showAndWait();
@@ -104,6 +106,7 @@ public class RedisAdminController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 800, 600);
+            dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/settings.png")));
             dialog.setScene(scene);
             dialog.setTitle("Einstellungen");
             dialog.showAndWait();
@@ -166,6 +169,7 @@ public class RedisAdminController {
         Stage dialog = new Stage();
         dialog.initStyle(StageStyle.UTILITY);
         Scene scene = new Scene(root, 500, 500);
+        dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/add.png")));
         dialog.setScene(scene);
         dialog.setTitle("neuer Schlüssel");
         dialog.showAndWait();

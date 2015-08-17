@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class RedisAdmin extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("RedisAdmin.fxml"));
         Scene scene = new Scene(root, 1000, 800);
+        primaryStage.getIcons().add(new Image(RedisAdmin.class.getResourceAsStream("resource/app.png")));
         primaryStage.setTitle("Redis Admin");
         primaryStage.setScene(scene);
         primaryStage.show();

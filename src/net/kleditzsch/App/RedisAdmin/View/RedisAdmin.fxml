@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.input.*?>
 <?import java.lang.*?>
@@ -14,23 +15,75 @@
         <menus>
           <Menu mnemonicParsing="false" text="Datei">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#clickSettingsMenuItem" text="Einstellungen" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickSettingsMenuItem" text="Einstellungen">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/settings.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#clickExitMenuItem" text="beenden" />
+              <MenuItem mnemonicParsing="false" onAction="#clickExitMenuItem" text="beenden">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Bearbeiten">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel" />
-                  <MenuItem mnemonicParsing="false" onAction="#clickTruncateDatabase" text="Datenbank leeren" />
+                <MenuItem mnemonicParsing="false" onAction="#clickAddKeyMenuItem" text="neuer Schlüssel">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#clickTruncateDatabase" text="Datenbank leeren">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/truncate.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#clickCreateBackupMenuItem" text="Backup erstellen" />
-                  <MenuItem mnemonicParsing="false" onAction="#clickRestoreBackupMenuItem" text="Backup wiederherstellen" />
+                  <MenuItem mnemonicParsing="false" onAction="#clickCreateBackupMenuItem" text="Backup erstellen">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/backup.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#clickRestoreBackupMenuItem" text="Backup wiederherstellen">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/restore.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="?">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#clickAboutMenuItem" text="Über" />
+              <MenuItem mnemonicParsing="false" onAction="#clickAboutMenuItem" text="Über">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resource/help.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
             </items>
           </Menu>
         </menus>
@@ -60,9 +113,23 @@
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="F5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator>
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resource/refresh.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
                               </MenuItem>
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem fx:id="deleteTreeContextMenuItem" disable="true" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen" />
+                              <MenuItem fx:id="deleteTreeContextMenuItem" disable="true" mnemonicParsing="false" onAction="#clickDeleteTreeItem" text="löschen">
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resource/close.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></MenuItem>
                           </items>
                         </ContextMenu>
                      </contextMenu>

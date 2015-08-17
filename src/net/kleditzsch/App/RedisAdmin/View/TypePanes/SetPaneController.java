@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
@@ -70,6 +71,7 @@ public class SetPaneController {
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
             Scene scene = new Scene(root, 500, 400);
+            dialog.getIcons().add(new Image(SetPaneController.class.getResourceAsStream("./../resource/add.png")));
             dialog.setScene(scene);
             dialog.setTitle("Set Eintrag erstellen");
             dialog.showAndWait();
