@@ -198,20 +198,22 @@ public class RedisAdminController {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Dateien", "*.xml", "*.XML"));
         fc.setInitialDirectory(lastSavePath.getParent().toFile());
         fc.setInitialFileName(lastSavePath.getFileName().toString());
-        System.out.println(lastSavePath.getFileName());
         File choosedFile = fc.showSaveDialog(null);
         if(choosedFile != null) {
 
             lastSavePath = choosedFile.toPath();
 
             //Datei loeschen
-            try {
+            if(Files.exists(lastSavePath)) {
 
-                Files.delete(lastSavePath);
-            } catch (IOException e) {
+                try {
 
-                UiDialogHelper.showErrorDialog("Fehler", lastSavePath.getFileName().toString(), "Die Datei konnte nicht gelöscht werden");
-                return;
+                    Files.delete(lastSavePath);
+                } catch (IOException e) {
+
+                    UiDialogHelper.showErrorDialog("Fehler", lastSavePath.getFileName().toString(), "Die Datei konnte nicht gelöscht werden");
+                    return;
+                }
             }
 
             //Backup erstellen
