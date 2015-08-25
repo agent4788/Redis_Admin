@@ -125,43 +125,101 @@ public class ServerInfoController {
 
     protected void loadServerInfo() {
 
-        Map<String, Map<String, String>> serverInfo = RedisConnectionManager.getInstance().getServerInfoForCurrentConnection();
-        String os = serverInfo.get("Server").get("os");
-        String version = serverInfo.get("Server").get("redis_version");
-        String mode = serverInfo.get("Server").get("redis_mode");
-        String uptime = serverInfo.get("Server").get("uptime_in_seconds");
-        String configFile = serverInfo.get("Server").get("config_file");
+        Map<String, String> serverInfo = RedisConnectionManager.getInstance().getServerInfoForCurrentConnection();
 
-        String memoryUsage = serverInfo.get("Memory").get("used_memory");
-        String memoryUsagePeak = serverInfo.get("Memory").get("used_memory_peak");
+        //OS
+        if(serverInfo.containsKey("os")) {
 
-        String lastSaveTime = serverInfo.get("Persistence").get("rdb_last_save_time");
-        String lastSaveState = serverInfo.get("Persistence").get("rdb_last_bgsave_status");
+            String os = serverInfo.get("os");
+            osLabel.setText(os);
+        }
 
-        String received = serverInfo.get("Stats").get("total_net_input_bytes");
-        String transmitted = serverInfo.get("Stats").get("total_net_output_bytes");
+        //Redis Version
+        if(serverInfo.containsKey("redis_version")) {
 
-        //Daten Anzeigen
-        osLabel.setText(os);
-        versionLabel.setText(version);
-        modusLabel.setText(mode);
-        runtimeLabel.setText(TimeUtil.formatSeconds(Long.parseLong(uptime), false));
-        configFileLabel.setText(configFile);
+            String version = serverInfo.get("redis_version");
+            versionLabel.setText(version);
+        }
 
-        memoryUsageLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(memoryUsage)));
-        peakMemoryUsageLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(memoryUsagePeak)));
+        //Redis Modus
+        if(serverInfo.containsKey("redis_mode")) {
 
-        Instant lastSave = TimeUtil.getInstantOfEpoch(Long.parseLong(lastSaveTime));
-        Duration diff = Duration.between(Instant.now(), lastSave);
-        lastSaveLabel.setText(TimeUtil.formatDuration(diff, false));
-        saveStateLabel.setText(lastSaveState);
+            String mode = serverInfo.get("redis_mode");
+            modusLabel.setText(mode);
+        } else if(serverInfo.containsKey("role")) {
 
-        recivedLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(received)));
-        sendLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(transmitted)));
+            String mode = serverInfo.get("role");
+            modusLabel.setText(mode);
+        }
+
+        //Redis Uptime
+        if(serverInfo.containsKey("uptime_in_seconds")) {
+
+            String uptime = serverInfo.get("uptime_in_seconds");
+            runtimeLabel.setText(TimeUtil.formatSeconds(Long.parseLong(uptime), false));
+        }
+
+        //Redis Uptime
+        if(serverInfo.containsKey("config_file")) {
+
+            String configFile = serverInfo.get("config_file");
+            configFileLabel.setText(configFile);
+        }
+
+        //Redis Config Datei
+        if(serverInfo.containsKey("config_file")) {
+
+            String configFile = serverInfo.get("config_file");
+            configFileLabel.setText(configFile);
+        }
+
+        //Redis Speicherbedarf
+        if(serverInfo.containsKey("used_memory")) {
+
+            String memoryUsage = serverInfo.get("used_memory");
+            memoryUsageLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(memoryUsage)));
+        }
+
+        //Redis Speicherbedarf spitze
+        if(serverInfo.containsKey("used_memory_peak")) {
+
+            String memoryUsagePeak = serverInfo.get("used_memory_peak");
+            peakMemoryUsageLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(memoryUsagePeak)));
+        }
+
+        //Redis letzte Speicherung
+        if(serverInfo.containsKey("rdb_last_save_time")) {
+
+            String lastSaveTime = serverInfo.get("rdb_last_save_time");
+            Instant lastSave = TimeUtil.getInstantOfEpoch(Long.parseLong(lastSaveTime));
+            Duration diff = Duration.between(Instant.now(), lastSave);
+            lastSaveLabel.setText(TimeUtil.formatDuration(diff, false));
+        }
+
+        //Redis letzter Speicherstatus
+        if(serverInfo.containsKey("rdb_last_bgsave_status")) {
+
+            String lastSaveState = serverInfo.get("rdb_last_bgsave_status");
+            saveStateLabel.setText(lastSaveState);
+        }
+
+        //Redis letzter Speicherstatus
+        if(serverInfo.containsKey("total_net_input_bytes")) {
+
+            String received = serverInfo.get("total_net_input_bytes");
+            recivedLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(received)));
+        }
+
+        //Redis letzter Speicherstatus
+        if(serverInfo.containsKey("total_net_output_bytes")) {
+
+            String transmitted = serverInfo.get("total_net_output_bytes");
+            sendLabel.setText(FileUtil.formatFilezizeBinary(Integer.parseInt(transmitted)));
+        }
 
         //Datenbanken
         databasesList.getItems().clear();
-        Map<String, String> keyspace = serverInfo.get("Keyspace");
+        Map<String, String> keyspace = RedisConnectionManager.getInstance().getDatabaseListForCurrentConnection();
         for(String key : keyspace.keySet()) {
 
             databasesList.getItems().add("DB-" + key.substring(2) + " - " + keyspace.get(key));

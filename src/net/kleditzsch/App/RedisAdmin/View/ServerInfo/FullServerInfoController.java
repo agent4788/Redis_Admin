@@ -45,23 +45,12 @@ public class FullServerInfoController {
 
         StringWriter buffer = new StringWriter();
         PrintWriter pw = new PrintWriter(buffer);
-        Map<String, Map<String, String>> serverInfo = RedisConnectionManager.getInstance().getServerInfoForCurrentConnection();
+        Map<String, String> serverInfo = RedisConnectionManager.getInstance().getServerInfoForCurrentConnection();
 
         boolean first = true;
-        for(String section : serverInfo.keySet()) {
+        for(String key : serverInfo.keySet()) {
 
-            //Leerzeile von den Sektionen
-            if(first == true) {
-                first = false;
-            } else {
-                pw.println();
-            }
-
-            pw.println(" # " + section);
-            for(String key : serverInfo.get(section).keySet()) {
-
-                pw.println("\t" + key + " : " + serverInfo.get(section).get(key));
-            }
+            pw.println("\t" + key + " : " + serverInfo.get(key));
         }
 
         dataTextArea.setText(buffer.toString());

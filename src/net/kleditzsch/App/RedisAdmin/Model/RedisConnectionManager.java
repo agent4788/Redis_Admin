@@ -12,10 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -144,10 +141,10 @@ public class RedisConnectionManager {
         }
     }
 
-    public Map<String, Map<String, String>> getServerInfoForCurrentConnection() {
+    public Map<String, String> getServerInfoForCurrentConnection() {
 
         //Map erstellen
-        Map<String, Map<String, String>> sections = new HashMap<>();
+        Map<String, String> serverInfoMap = new HashMap<>();
 
         //Datenbankinfo laden und einlesen
         Jedis db = RedisConnectionManager.getInstance().getConnection();
@@ -155,23 +152,9 @@ public class RedisConnectionManager {
 
         String[] serverInfoParts = serverInfo.split("\n");
 
-        String section = "";
-        Map<String, String> sectionMap = new HashMap<>();
         for(int i = 0; i < serverInfoParts.length; i++) {
 
             String part = serverInfoParts[i].trim();
-
-            //Neue Sektion
-            if(part.startsWith("#")) {
-
-                section = part.substring(2).trim();
-                if(!sections.keySet().contains(section)) {
-
-                    sectionMap = new HashMap<>();
-                    sections.put(section, sectionMap);
-                }
-                continue;
-            }
 
             //Eintrag
             Matcher m = Pattern.compile("^([^:]+):(.+)$").matcher(part);
@@ -179,12 +162,41 @@ public class RedisConnectionManager {
 
                 String key = m.group(1).trim();
                 String value = m.group(2).trim();
-                sectionMap.put(key, value);
+                serverInfoMap.put(key, value);
                 continue;
             }
         }
 
-        return sections;
+        return serverInfoMap;
+    }
+
+    public Map<String, String> getDatabaseListForCurrentConnection() {
+
+        //Liste erstellen
+        Map<String, String> databases = new HashMap<>();
+
+        //Datenbankinfo laden und einlesen
+        Jedis db = RedisConnectionManager.getInstance().getConnection();
+        String serverInfo = db.info();
+
+        String[] serverInfoParts = serverInfo.split("\n");
+
+        for(int i = 0; i < serverInfoParts.length; i++) {
+
+            String part = serverInfoParts[i].trim();
+
+            //Eintrag
+            Matcher m = Pattern.compile("^([^:]+):(.+)$").matcher(part);
+            if(m.find() && m.group(1).startsWith("db")) {
+
+                String key = m.group(1).trim();
+                String value = m.group(2).trim();
+                databases.put(key, value);
+                continue;
+            }
+        }
+
+        return databases;
     }
 
     public RedisConnectionList getConnectionsList() {
