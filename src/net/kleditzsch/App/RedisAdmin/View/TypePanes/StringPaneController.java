@@ -154,6 +154,12 @@ public class StringPaneController {
         //Dialog anzeigen
         String value = UiDialogHelper.showTextInputDialog("TTL bearbeiten", "-1 um die TTL zu deaktivieren", "TTL:", Long.toString(ttl));
 
+        //Abbruch
+        if(value.equals(Long.toString(ttl))) {
+
+            return;
+        }
+
         //Eingabe überpruefen
         try {
 

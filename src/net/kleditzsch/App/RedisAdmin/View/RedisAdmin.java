@@ -17,6 +17,8 @@ public class RedisAdmin extends Application {
 
     public final static String VERSION = "1.0.0 Beta 2";
 
+    private static Stage primaryStage = null;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -24,11 +26,18 @@ public class RedisAdmin extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
+        RedisAdmin.primaryStage = primaryStage;
+
         Parent root = FXMLLoader.load(getClass().getResource("RedisAdmin.fxml"));
         Scene scene = new Scene(root, 1000, 800);
         primaryStage.getIcons().add(new Image(RedisAdmin.class.getResourceAsStream("resource/app.png")));
         primaryStage.setTitle("Redis Admin");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static Stage getPrimaryStage() {
+
+        return primaryStage;
     }
 }

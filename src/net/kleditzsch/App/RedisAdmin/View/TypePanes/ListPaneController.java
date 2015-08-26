@@ -8,16 +8,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Backup.Data.Entrys.ListEntry;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.ListEntryAddDialogController;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.ListEntryEditDialogController;
+import net.kleditzsch.App.RedisAdmin.View.RedisAdmin;
 import net.kleditzsch.App.RedisAdmin.View.RedisAdminController;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
 import net.kleditzsch.Ui.UiDialogHelper;
@@ -62,6 +65,9 @@ public class ListPaneController {
     @FXML // fx:id="valueColum"
     private TableColumn<ListEntry, String> valueColumn; // Value injected by FXMLLoader
 
+    @FXML // fx:id="contextMenu"
+    private ContextMenu contextMenu; // Value injected by FXMLLoader
+
     @FXML
     void clickDeleteButton(ActionEvent event) {
 
@@ -94,6 +100,9 @@ public class ListPaneController {
     @FXML
     void clickAddMenuItem(ActionEvent event) {
 
+        //Kontextmenü schließen
+        contextMenu.hide();
+
         //Schluessel laden
         String key = this.getKey();
 
@@ -108,6 +117,8 @@ public class ListPaneController {
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(RedisAdmin.getPrimaryStage());
             Scene scene = new Scene(root, 500, 400);
             dialog.getIcons().add(new Image(ListPaneController.class.getResourceAsStream("./../resource/add.png")));
             dialog.setScene(scene);
@@ -171,6 +182,9 @@ public class ListPaneController {
     @FXML
     void clickEditMenuItem(ActionEvent event) {
 
+        //Kontextmenü schließen
+        contextMenu.hide();
+
         //Schluessel laden
         String key = this.getKey();
 
@@ -192,6 +206,8 @@ public class ListPaneController {
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(RedisAdmin.getPrimaryStage());
             Scene scene = new Scene(root, 500, 400);
             dialog.getIcons().add(new Image(ListPaneController.class.getResourceAsStream("./../resource/edit.png")));
             dialog.setScene(scene);
@@ -230,6 +246,12 @@ public class ListPaneController {
 
         //Dialog anzeigen
         String value = UiDialogHelper.showTextInputDialog("TTL bearbeiten", "-1 um die TTL zu deaktivieren", "TTL:", Long.toString(ttl));
+
+        //Abbruch
+        if(value.equals(Long.toString(ttl))) {
+
+            return;
+        }
 
         //Eingabe überpruefen
         try {

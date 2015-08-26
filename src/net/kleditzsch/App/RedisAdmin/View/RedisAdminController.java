@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Backup.BackupExport;
@@ -77,6 +78,8 @@ public class RedisAdminController {
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(RedisAdmin.getPrimaryStage());
             Scene scene = new Scene(root, 500, 170);
             dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/help.png")));
             dialog.setScene(scene);
@@ -105,6 +108,8 @@ public class RedisAdminController {
 
             Stage dialog = new Stage();
             dialog.initStyle(StageStyle.UTILITY);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(RedisAdmin.getPrimaryStage());
             Scene scene = new Scene(root, 800, 600);
             dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/settings.png")));
             dialog.setScene(scene);
@@ -162,17 +167,25 @@ public class RedisAdminController {
     }
 
     @FXML
-    void clickAddKeyMenuItem(ActionEvent event) throws IOException {
+    void clickAddKeyMenuItem(ActionEvent event) {
 
-        Parent root = FXMLLoader.load(getClass().getResource("Dialog/AddKeyView/AddKeyDialog.fxml"));
+        try {
 
-        Stage dialog = new Stage();
-        dialog.initStyle(StageStyle.UTILITY);
-        Scene scene = new Scene(root, 500, 500);
-        dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/add.png")));
-        dialog.setScene(scene);
-        dialog.setTitle("neuer Schlüssel");
-        dialog.showAndWait();
+            Parent root = FXMLLoader.load(getClass().getResource("Dialog/AddKeyView/AddKeyDialog.fxml"));
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UTILITY);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(RedisAdmin.getPrimaryStage());
+            Scene scene = new Scene(root, 500, 500);
+            dialog.getIcons().add(new Image(RedisAdminController.class.getResourceAsStream("resource/add.png")));
+            dialog.setScene(scene);
+            dialog.setTitle("neuer Schlüssel");
+            dialog.showAndWait();
+        } catch (IOException ex) {
+
+            UiDialogHelper.showErrorDialog("Fehler", null, "Die FXML Datei \"AddKeyDialog.fxml\" konnte nicht geladen werden");
+        }
     }
 
     @FXML

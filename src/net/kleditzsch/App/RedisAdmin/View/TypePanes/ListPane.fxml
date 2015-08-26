@@ -63,7 +63,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
          <contextMenu>
-            <ContextMenu>
+            <ContextMenu fx:id="contextMenu">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#clickAddMenuItem" text="hinzufügen">
                      <graphic>
