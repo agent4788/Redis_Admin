@@ -28,9 +28,9 @@ public class RedisAdmin extends Application {
 
         RedisAdmin.primaryStage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("RedisAdmin.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/net/kleditzsch/App/RedisAdmin/View/Dialog/RedisAdmin/RedisAdmin.fxml"));
         Scene scene = new Scene(root, 1000, 800);
-        primaryStage.getIcons().add(new Image(RedisAdmin.class.getResourceAsStream("resource/app.png")));
+        primaryStage.getIcons().add(new Image(RedisAdmin.class.getResourceAsStream("/net/kleditzsch/App/RedisAdmin/View/resource/app.png")));
         primaryStage.setTitle("Redis Admin");
         primaryStage.setScene(scene);
         primaryStage.show();
