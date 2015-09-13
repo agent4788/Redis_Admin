@@ -67,20 +67,6 @@ public class HashPaneController {
     @FXML // fx:id="contextMenu"
     private ContextMenu contextMenu; // Value injected by FXMLLoader
 
-    @FXML
-    // This method is called by the FXMLLoader when initialization is complete
-    void initialize() {
-
-        assert typeLabel != null : "fx:id=\"typeLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert ttlLabel != null : "fx:id=\"ttlLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert encodingLabel != null : "fx:id=\"encodingLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert sizeLabel != null : "fx:id=\"sizeLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert keyLabel != null : "fx:id=\"keyLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert hashTable != null : "fx:id=\"hashTable\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert keyColumn != null : "fx:id=\"keyColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
-        assert valueColumn != null : "fx:id=\"valueColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
-    }
-
     public void init() {
 
         loadHashData();
@@ -386,6 +372,20 @@ public class HashPaneController {
     void clickReloadButton(ActionEvent event) {
 
         loadHashData();
+    }
+
+    @FXML
+        // This method is called by the FXMLLoader when initialization is complete
+    void initialize() {
+
+        assert typeLabel != null : "fx:id=\"typeLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert ttlLabel != null : "fx:id=\"ttlLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert encodingLabel != null : "fx:id=\"encodingLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert sizeLabel != null : "fx:id=\"sizeLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert keyLabel != null : "fx:id=\"keyLabel\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert hashTable != null : "fx:id=\"hashTable\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert keyColumn != null : "fx:id=\"keyColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
+        assert valueColumn != null : "fx:id=\"valueColumn\" was not injected: check your FXML file 'HashPane.fxml'.";
     }
 
     public String getKey() {
