@@ -10,6 +10,8 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -223,5 +225,20 @@ public class ServerInfoController {
 
             databasesList.getItems().add("DB-" + key.substring(2) + " - " + keyspace.get(key));
         }
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                Thread.sleep(30000);
+                return null;
+            }
+        };
+        task.setOnSucceeded((WorkerStateEvent event) -> {
+
+           this.loadServerInfo();
+        });
+        Thread thread = new Thread(task);
+        thread.start();
     }
 }
