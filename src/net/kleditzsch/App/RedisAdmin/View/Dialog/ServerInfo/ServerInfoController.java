@@ -19,10 +19,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.kleditzsch.App.RedisAdmin.Model.RedisConnectionManager;
 import net.kleditzsch.App.RedisAdmin.View.Dialog.RedisAdmin.RedisAdminController;
+import net.kleditzsch.App.RedisAdmin.View.RedisAdmin;
 import net.kleditzsch.Ui.UiDialogHelper;
 import net.kleditzsch.Util.FileUtil;
 import net.kleditzsch.Util.TimeUtil;
@@ -100,6 +102,8 @@ public class ServerInfoController {
             Scene scene = new Scene(root, 600, 500);
             dialog.setScene(scene);
             dialog.setTitle("Server Info");
+            dialog.initOwner(RedisAdmin.getPrimaryStage());
+            dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.showAndWait();
         } catch (IOException ex) {
 
