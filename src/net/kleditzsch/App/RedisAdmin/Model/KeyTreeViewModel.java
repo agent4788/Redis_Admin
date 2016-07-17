@@ -4,8 +4,11 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import net.kleditzsch.App.RedisAdmin.View.Dialog.RedisAdmin.RedisAdminController;
+import net.kleditzsch.App.RedisAdmin.View.RedisAdmin;
 import redis.clients.jedis.Jedis;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -18,6 +21,7 @@ public class KeyTreeViewModel {
     protected TreeItem<String> root = null;
 
     HashMap<String, TreeItem<String>> map = new HashMap<>();
+    HashMap<String, Boolean> expandState = new HashMap<>();
 
     private static KeyTreeViewModel ourInstance = new KeyTreeViewModel();
 
@@ -36,6 +40,13 @@ public class KeyTreeViewModel {
      * @return Root Element
      */
     public TreeItem<String> getKeyList() {
+
+        //alten Status speichern
+        expandState.clear();
+        for(Map.Entry<String, TreeItem<String>> entry : map.entrySet()) {
+
+            expandState.put(entry.getKey(), entry.getValue().isExpanded());
+        }
 
         //Map leeren
         map.clear();
@@ -81,6 +92,15 @@ public class KeyTreeViewModel {
                             Node data = new ImageView(dataImage);
                             item = new TreeItem<>(keyParts[i], data);
                         }
+
+                        //Expand Status wieder herstellen
+                        if(expandState.containsKey(keyStack) && expandState.get(keyStack)) {
+
+                            item.setExpanded(true);
+                        } else {
+
+                            item.setExpanded(false);
+                        }
                         root.getChildren().add(item);
                         map.put(keyStack, item);
                     }
@@ -102,6 +122,16 @@ public class KeyTreeViewModel {
                             Node data = new ImageView(dataImage);
                             item = new TreeItem<>(keyParts[i], data);
                         }
+
+                        //Expand Status wieder herstellen
+                        if(expandState.containsKey(keyStack) && expandState.get(keyStack)) {
+
+                            item.setExpanded(true);
+                        } else {
+
+                            item.setExpanded(false);
+                        }
+
                         parentNode.getChildren().add(item);
                         map.put(keyStack, item);
                         parentNode = item;
