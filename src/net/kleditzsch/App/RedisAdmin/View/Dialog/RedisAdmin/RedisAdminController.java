@@ -4,6 +4,7 @@ package net.kleditzsch.App.RedisAdmin.View.Dialog.RedisAdmin;
  * Created by oliver on 19.07.15.
  */
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -103,7 +104,7 @@ public class RedisAdminController {
     @FXML
     void clickExitMenuItem(ActionEvent event) {
 
-        System.exit(0);
+        Platform.exit();
     }
 
     @FXML
