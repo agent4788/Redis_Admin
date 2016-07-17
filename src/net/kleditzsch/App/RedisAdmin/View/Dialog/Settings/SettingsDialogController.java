@@ -6,6 +6,8 @@ package net.kleditzsch.App.RedisAdmin.View.Dialog.Settings;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -54,6 +56,12 @@ public class SettingsDialogController {
 
     @FXML // fx:id="connectionIsDefault"
     private CheckBox connectionIsDefault; // Value injected by FXMLLoader
+
+    @FXML // fx:id="connectionTestButton"
+    private Button connectionTestButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="connectionTestProgress"
+    private ProgressIndicator connectionTestProgress; // Value injected by FXMLLoader
 
     @FXML // fx:id="messageLabel"
     private Label messageLabel; // Value injected by FXMLLoader
@@ -107,6 +115,7 @@ public class SettingsDialogController {
             messageLabel.setText("Der Port " + portValue + " ist ungültig");
             messageLabel.setTextFill(Color.RED);
         }
+        final int validPort = port;
 
         int timeout = 0;
         try {
@@ -117,37 +126,77 @@ public class SettingsDialogController {
             messageLabel.setText("Der Timeout " + timeoutValue + " ist ungültig");
             messageLabel.setTextFill(Color.RED);
         }
+        final int validTimeout = timeout;
 
         //Versuch zu verbinden
-        try {
+        Task<Integer> task = new Task<Integer>() {
 
-            Jedis connection = new Jedis(host, port, timeout);
-            if(password != null && !password.isEmpty()) {
+            @Override
+            protected Integer call() throws Exception {
 
-                connection.auth(password);
+                try {
+
+                    Jedis connection = new Jedis(host, validPort, validTimeout);
+                    if(password != null && !password.isEmpty()) {
+
+                        connection.auth(password);
+                    }
+                    connection.select(Integer.parseInt(database));
+                    String ping = connection.ping();
+
+                    //Verbindung trennen
+                    if(connection.isConnected()) {
+
+                        connection.close();
+                    }
+
+                    if(ping.equals("PONG")) {
+
+                        return 1;
+                    } else {
+
+                        return 0;
+                    }
+                } catch(JedisConnectionException ex) {
+
+                    return 2;
+                }
             }
-            connection.select(Integer.parseInt(database));
+        };
+        task.setOnSucceeded((WorkerStateEvent workerEvent) -> {
 
-            if(connection.ping().equals("PONG")) {
+            //Anzeige vom Ergebnis vorbereiten
+            int result = (Integer) workerEvent.getSource().getValue();
+            switch(result) {
 
-                messageLabel.setText("Die Verbindung wurde erfolgreich hergestellt");
-                messageLabel.setTextFill(Color.GREEN);
-            } else {
+                case 0:
 
-                messageLabel.setText("Die Verbindung konnte nicht hergestellt werden");
-                messageLabel.setTextFill(Color.RED);
+                    messageLabel.setText("Die Verbindung konnte nicht hergestellt werden");
+                    messageLabel.setTextFill(Color.RED);
+                    break;
+                case 1:
+
+                    messageLabel.setText("Die Verbindung wurde erfolgreich hergestellt");
+                    messageLabel.setTextFill(Color.GREEN);
+                    break;
+                case 2:
+
+                    messageLabel.setText("Die Verbindung konnte nicht hergestellt werden");
+                    messageLabel.setTextFill(Color.RED);
+                    break;
             }
 
-            //Verbindung trennen
-            if(connection.isConnected()) {
+            //Ergebnis anzeigen
+            connectionTestProgress.setVisible(false);
+            messageLabel.setVisible(true);
+        });
 
-                connection.close();
-            }
-        } catch(JedisConnectionException ex) {
 
-            messageLabel.setText("Die Verbindung konnte nicht hergestellt werden\n" + ex.getLocalizedMessage());
-            messageLabel.setTextFill(Color.RED);
-        }
+        connectionTestProgress.setVisible(true);
+        messageLabel.setVisible(false);
+
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     @FXML
@@ -268,7 +317,13 @@ public class SettingsDialogController {
         assert connectionPassword != null : "fx:id=\"connectionPassword\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
         assert connectionDatabase != null : "fx:id=\"connectionDatabase\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
         assert connectionIsDefault != null : "fx:id=\"connectionIsDefault\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
+        assert connectionTestButton != null : "fx:id=\"connectionTestButton\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
+        assert connectionTestProgress != null : "fx:id=\"connectionTestProgress\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
         assert messageLabel != null : "fx:id=\"messageLabel\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
+        assert connectionDelimiter != null : "fx:id=\"connectionDelimiter\" was not injected: check your FXML file 'SettingsDialog.fxml'.";
+
+        connectionTestProgress.setVisible(false);
+        messageLabel.setVisible(false);
 
         RedisConnectionList redisConnectionList = RedisConnectionManager.getInstance().getConnectionsList();
 
