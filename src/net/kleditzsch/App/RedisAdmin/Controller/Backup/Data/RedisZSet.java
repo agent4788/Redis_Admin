@@ -13,6 +13,8 @@ public class RedisZSet extends RedisDataType {
 
     private String key = "";
 
+    private long ttl = 0;
+
     private List<ZSetEntry> entrys = new ArrayList<>();
 
     public RedisZSet() {
@@ -38,6 +40,16 @@ public class RedisZSet extends RedisDataType {
     public void setKey(String key) {
 
         this.key = key;
+    }
+
+    public long getTtl() {
+
+        return ttl;
+    }
+
+    public void setTtl(long ttl) {
+
+        this.ttl = ttl;
     }
 
     public void add(ZSetEntry entry) {

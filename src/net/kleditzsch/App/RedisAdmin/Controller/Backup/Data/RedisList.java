@@ -13,6 +13,8 @@ public class RedisList extends RedisDataType {
 
     private String key = "";
 
+    private long ttl = 0;
+
     private List<ListEntry> entrys = new ArrayList<>();
 
     public RedisList() {
@@ -38,6 +40,16 @@ public class RedisList extends RedisDataType {
     public void setKey(String key) {
 
         this.key = key;
+    }
+
+    public long getTtl() {
+
+        return ttl;
+    }
+
+    public void setTtl(long ttl) {
+
+        this.ttl = ttl;
     }
 
     public void add(ListEntry entry) {

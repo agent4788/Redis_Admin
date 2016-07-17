@@ -45,11 +45,13 @@ public abstract class BackupExport {
                 case "string":
 
                     RedisString string = new RedisString(key, db.get(key));
+                    string.setTtl(db.ttl(key));
                     database.getStrings().add(string);
                     break;
                 case "hash":
 
                     RedisHash hash = new RedisHash(key);
+                    hash.setTtl(db.ttl(key));
                     Map<String, String> value = db.hgetAll(key);
                     for(String hashKey : value.keySet()) {
 
@@ -60,6 +62,7 @@ public abstract class BackupExport {
                 case "list":
 
                     RedisList list = new RedisList(key);
+                    list.setTtl(db.ttl(key));
                     long len = db.llen(key);
                     for(long i = 0; i < len; i++){
 
@@ -70,6 +73,7 @@ public abstract class BackupExport {
                 case "set":
 
                     RedisSet set = new RedisSet(key);
+                    set.setTtl(db.ttl(key));
                     Set<String> entrys = db.smembers(key);
                     for(String entry : entrys) {
 
@@ -80,6 +84,7 @@ public abstract class BackupExport {
                 case "zset":
 
                     RedisZSet zset = new RedisZSet(key);
+                    zset.setTtl(db.ttl(key));
                     Set<String> value1 = db.zrange(key, 0L, -1L);
                     for(String val : value1) {
 

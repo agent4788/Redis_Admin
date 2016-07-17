@@ -13,6 +13,8 @@ public class RedisHash extends RedisDataType {
 
     private String key = "";
 
+    private long ttl = 0;
+
     private List<HashEntry> entrys = new ArrayList<>();
 
     public RedisHash() {
@@ -38,6 +40,16 @@ public class RedisHash extends RedisDataType {
     public void setKey(String key) {
 
         this.key = key;
+    }
+
+    public long getTtl() {
+
+        return ttl;
+    }
+
+    public void setTtl(long ttl) {
+
+        this.ttl = ttl;
     }
 
     public void add(HashEntry entry) {

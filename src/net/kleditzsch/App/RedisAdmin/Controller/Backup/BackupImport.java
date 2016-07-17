@@ -58,6 +58,11 @@ public abstract class BackupImport {
 
                     errorKeys.add(string.getKey());
                 }
+
+                if(string.getTtl() > 0) {
+
+                    db.expire(string.getKey(), (int) string.getTtl());
+                }
             }
 
             //Hashes
@@ -70,6 +75,11 @@ public abstract class BackupImport {
                         errorKeys.add(hash.getKey() + " - " + entry.getKey());
                     }
                 }
+
+                if(hash.getTtl() > 0) {
+
+                    db.expire(hash.getKey(), (int) hash.getTtl());
+                }
             }
 
             //Listen
@@ -78,6 +88,11 @@ public abstract class BackupImport {
                 for(ListEntry entry : list.getEntrys()) {
 
                     db.rpush(list.getKey(), entry.getValue());
+                }
+
+                if(list.getTtl() > 0) {
+
+                    db.expire(list.getKey(), (int) list.getTtl());
                 }
             }
 
@@ -91,6 +106,11 @@ public abstract class BackupImport {
                         errorKeys.add(set.getKey() + " - " + entry);
                     }
                 }
+
+                if(set.getTtl() > 0) {
+
+                    db.expire(set.getKey(), (int) set.getTtl());
+                }
             }
 
             //sortiertes Set
@@ -103,9 +123,14 @@ public abstract class BackupImport {
                         errorKeys.add(zset.getKey() + " - " + entry.getValue());
                     }
                 }
+
+                if(zset.getTtl() > 0) {
+
+                    db.expire(zset.getKey(), (int) zset.getTtl());
+                }
             }
 
-            errorKeys.stream().forEach(System.out::println);
+            errorKeys.forEach(System.out::println);
 
             return true;
         }
