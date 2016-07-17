@@ -75,6 +75,9 @@ public class RedisAdminController {
     @FXML // fx:id="logList"
     private ListView<String> logList; // Value injected by FXMLLoader
 
+    @FXML // fx:id="treeContextMenu"
+    private ContextMenu treeContextMenu; // Value injected by FXMLLoader
+
     @FXML
     void clickAboutMenuItem(ActionEvent event) {
         try {
@@ -175,6 +178,7 @@ public class RedisAdminController {
     @FXML
     void clickAddKeyMenuItem(ActionEvent event) {
 
+        treeContextMenu.hide();
         try {
 
             Parent root = FXMLLoader.load(getClass().getResource("/net/kleditzsch/App/RedisAdmin/View/Dialog/AddKey/AddKeyDialog.fxml"));
@@ -274,6 +278,10 @@ public class RedisAdminController {
     void initialize() {
         assert connectionChooser != null : "fx:id=\"connectionChooser\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
         assert keyTree != null : "fx:id=\"keyTree\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
+        assert treeContextMenu != null : "fx:id=\"treeContextMenu\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
+        assert deleteTreeContextMenuItem != null : "fx:id=\"deleteTreeContextMenuItem\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
+        assert keyView != null : "fx:id=\"keyView\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
+        assert logList != null : "fx:id=\"logList\" was not injected: check your FXML file 'RedisAdmin.fxml'.";
 
         //Referenz auf eigenes objekt speichern
         rac = this;
