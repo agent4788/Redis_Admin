@@ -273,7 +273,7 @@ public class HashPaneController {
         //FXML Laden
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HashEntryEditDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/HashEntryEditDialog.fxml"));
             Parent root = loader.load();
             HashEntryEditDialogController controller = loader.getController();
 

@@ -194,7 +194,7 @@ public class ListPaneController {
 
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ListEntryEditDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/ListEntryEditDialog.fxml"));
             Parent root = loader.load();
             ListEntryEditDialogController controller = loader.getController();
 

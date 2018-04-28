@@ -81,7 +81,7 @@ public class ZsetPaneController {
         //FXML Laden
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ZSetEntryEditDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/ZSetEntryEditDialog.fxml"));
             Parent root = loader.load();
             ZSetEntryEditDialogController controller = loader.getController();
 
@@ -90,7 +90,7 @@ public class ZsetPaneController {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(RedisAdmin.getPrimaryStage());
             Scene scene = new Scene(root, 500, 400);
-            dialog.getIcons().add(new Image(ZsetPaneController.class.getResourceAsStream("/net/kleditzsch/App/RedisAdmin/View/resource/resource/add.png")));
+            dialog.getIcons().add(new Image(ZsetPaneController.class.getResourceAsStream("/icon/add.png")));
             dialog.setScene(scene);
             dialog.setTitle("ZSet Eintrag erstellen");
             dialog.showAndWait();
@@ -194,7 +194,7 @@ public class ZsetPaneController {
         ZSetEntry entry = hashTable.getSelectionModel().getSelectedItem();
 
         //Eintrag loeschen
-        db.srem(key, entry.getValue());
+        db.zrem(key, entry.getValue());
 
         //Log Eintrag
         String val = (entry.getValue().length() < 20 ? entry.getValue() : entry.getValue().substring(0, 20) + " ...");

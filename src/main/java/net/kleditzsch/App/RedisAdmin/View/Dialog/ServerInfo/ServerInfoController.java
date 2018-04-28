@@ -94,7 +94,7 @@ public class ServerInfoController {
 
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../../../../../../resources/fxml/FullServerInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/FullServerInfo.fxml"));
             Parent root = loader.load();
 
             Stage dialog = new Stage();

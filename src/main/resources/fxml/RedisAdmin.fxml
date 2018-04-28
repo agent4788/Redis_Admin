@@ -27,7 +27,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/settings.png" />
+                              <Image url="@/icon/settings.png" />
                            </image>
                         </ImageView>
                      </graphic></MenuItem>
@@ -36,7 +36,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/close.png" />
+                              <Image url="@/icon/close.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -51,7 +51,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/add.png" />
+                              <Image url="@/icon/add.png" />
                            </image>
                         </ImageView>
                      </graphic></MenuItem>
@@ -59,7 +59,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/truncate.png" />
+                              <Image url="@/icon/truncate.png" />
                            </image>
                         </ImageView>
                      </graphic></MenuItem>
@@ -68,7 +68,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/backup.png" />
+                              <Image url="@/icon/backup.png" />
                            </image>
                         </ImageView>
                      </graphic></MenuItem>
@@ -76,7 +76,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/restore.png" />
+                              <Image url="@/icon/restore.png" />
                            </image>
                         </ImageView>
                      </graphic></MenuItem>
@@ -88,7 +88,7 @@
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resource/help.png" />
+                              <Image url="@/icon/help.png" />
                            </image>
                         </ImageView>
                      </graphic></MenuItem>
@@ -124,7 +124,7 @@
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../resource/refresh.png" />
+                                          <Image url="@/icon/refresh.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -134,7 +134,7 @@
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../resource/add.png" />
+                                          <Image url="@/icon/add.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -143,7 +143,7 @@
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../resource/close.png" />
+                                          <Image url="@/icon/close.png" />
                                        </image>
                                     </ImageView>
                                  </graphic></MenuItem>
